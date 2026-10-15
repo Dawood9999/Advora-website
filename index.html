@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdVora - Demo Rewards</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:Arial,sans-serif;
+  background:#f1f5f9;color:#172033
+}
+header{
+  background:linear-gradient(120deg,#10213e,#4338ca);
+  color:white;padding:24px 15px;text-align:center
+}
+header h1{margin:0;font-size:32px}
+header p{margin:8px 0 0;color:#e0e7ff}
+.container{max-width:1000px;margin:20px auto;padding:0 14px}
+.card{
+  background:white;padding:20px;border-radius:14px;
+  margin-bottom:18px;box-shadow:0 4px 15px #0000000c
+}
+h2{font-size:20px;margin-top:0;color:#243b75}
+input,button{
+  width:100%;padding:12px;margin:6px 0;
+  border-radius:8px;font-size:15px
+}
+input{border:1px solid #cbd5e1}
+button{
+  border:0;background:#4338ca;color:white;
+  cursor:pointer;font-weight:bold
+}
+button:hover{opacity:.9}
+button.secondary{background:#0f766e}
+button.danger{background:#b91c1c}
+button:disabled{background:#94a3b8;cursor:not-allowed}
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px
+}
+.stat{
+  padding:17px;border-radius:12px;background:#eef2ff;
+  border:1px solid #e0e7ff
+}
+.stat small{display:block;color:#475569;margin-bottom:8px}
+.stat strong{font-size:24px;color:#312e81;overflow-wrap:anywhere}
+.muted{color:#64748b;font-size:13px;line-height:1.6}
+.notice{
+  padding:12px;background:#fffbeb;border:1px solid #fde68a;
+  border-radius:9px;font-size:13px;line-height:1.6
+}
+.success{color:#047857}
+.error{color:#b91c1c}
+.hidden{display:none!important}
+.linkbox{
+  background:#f8fafc;padding:12px;border:1px dashed #94a3b8;
+  border-radius:8px;overflow-wrap:anywhere;font-size:14px
+}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:10px 7px;border-bottom:1px solid #e2e8f0;text-align:left}
+th{background:#f8fafc}
+.tablewrap{overflow-x:auto}
+footer{text-align:center;padding:20px;color:#64748b;font-size:12px}
+
+
+/* AdVora premium visual refresh — presentation only; demo logic unchanged */
+:root{
+  --navy:#0b1630;--navy2:#14264a;--blue:#4169e1;--teal:#0f9f91;
+  --ink:#18243b;--muted:#66758f;--line:#e4eaf3;--surface:#ffffff;
+  --page:#f4f7fc;--shadow:0 12px 32px rgba(19,35,70,.08)
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  background:radial-gradient(ellipse at 10% 0%,#e4ecff 0,transparent 34%),var(--page);
+  color:var(--ink);line-height:1.55
+}
+header{
+  position:relative;overflow:hidden;text-align:left;padding:32px max(22px,calc((100% - 1080px)/2));
+  background:linear-gradient(120deg,#0a1530 0%,#172d59 56%,#3d54c8 100%);
+  border-bottom:3px solid #24c4ad;box-shadow:0 10px 28px rgba(10,21,48,.18)
+}
+header:after{
+  content:"";position:absolute;width:270px;height:270px;border:1px solid #ffffff20;
+  border-radius:50%;right:8%;top:-155px;box-shadow:0 0 0 28px #ffffff08,0 0 0 58px #ffffff06;pointer-events:none
+}
+header h1{position:relative;z-index:1;font-size:clamp(30px,4vw,40px);letter-spacing:-1.3px;font-weight:850}
+header h1:before{content:"A";display:inline-grid;place-items:center;width:43px;height:43px;margin-right:12px;border-radius:13px;background:linear-gradient(135deg,#35d6bd,#5b7cff);color:white;font-size:25px;vertical-align:3px;box-shadow:0 5px 16px #0003}
+header p{position:relative;z-index:1;margin:7px 0 0 56px!important;color:#d5e1ff!important;font-size:14px;letter-spacing:.25px}
+.container{max-width:1100px;margin:28px auto;padding:0 20px}
+.notice{border-radius:13px;padding:14px 17px;background:#fff9e8;border:1px solid #f5df9d;color:#765515;box-shadow:0 5px 15px #6d54100a;margin-bottom:22px}
+.card{position:relative;background:var(--surface);padding:23px;border:1px solid #e7edf6;border-radius:17px;margin-bottom:20px;box-shadow:var(--shadow);transition:transform .18s ease,box-shadow .18s ease}
+.card h2{display:flex;align-items:center;gap:10px;font-size:19px;letter-spacing:-.25px;color:#172d59;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid #edf1f7}
+.card h2:before{content:"";display:inline-block;width:4px;height:21px;border-radius:4px;background:linear-gradient(#3c6be8,#22b8a4);flex:none}
+#auth{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:stretch}
+#auth .card{margin-bottom:0}
+input,select,textarea{width:100%;padding:13px 14px;margin:7px 0;border:1px solid #d7e0ed;border-radius:10px;background:#fbfcff;color:var(--ink);font:inherit;outline:none;transition:border-color .18s,box-shadow .18s}
+input:focus,select:focus,textarea:focus{border-color:#6788ef;box-shadow:0 0 0 3px #4169e11c;background:#fff}
+button{width:100%;padding:12px 16px;margin:7px 0;border:1px solid transparent;border-radius:10px;background:linear-gradient(135deg,#4169e1,#3448b9);color:white;cursor:pointer;font:inherit;font-weight:750;letter-spacing:.1px;box-shadow:0 5px 12px #4169e122;transition:transform .16s,box-shadow .16s,filter .16s}
+button:hover{opacity:1;filter:brightness(1.04);transform:translateY(-1px);box-shadow:0 8px 18px #4169e12b}
+button:active{transform:translateY(0)}
+button.secondary{background:linear-gradient(135deg,#0f9f91,#087b78);box-shadow:0 5px 12px #0f9f9122}
+button.danger{background:linear-gradient(135deg,#e05261,#b92743);box-shadow:0 5px 12px #b9274322}
+button:disabled{background:#b8c2d3;box-shadow:none;transform:none;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.stat{position:relative;overflow:hidden;padding:19px;border-radius:14px;background:linear-gradient(145deg,#f8faff,#eef3ff);border:1px solid #e0e8fb;min-width:0}
+.stat:after{content:"";position:absolute;width:70px;height:70px;right:-30px;top:-30px;border-radius:50%;background:#5979df0c}
+.stat small{display:block;color:#61718c;margin-bottom:8px;font-size:12px;font-weight:750;letter-spacing:.55px;text-transform:uppercase}
+.stat strong{position:relative;z-index:1;font-size:clamp(22px,2.5vw,28px);font-weight:850;color:#253f86;overflow-wrap:anywhere;letter-spacing:-.5px}
+.stat button{position:relative;z-index:1}
+.muted{color:var(--muted);font-size:13px;line-height:1.7}
+.linkbox{background:#f7faff;padding:14px;border:1px dashed #9aafd7;border-radius:11px;overflow-wrap:anywhere;font-size:14px;color:#28447f}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
+th,td{padding:12px 13px;border-bottom:1px solid #edf1f7;text-align:left;vertical-align:top}
+th{background:#f3f6fc;color:#304366;font-size:11px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+tr:last-child td{border-bottom:0}tbody tr:hover{background:#f8faff}
+.success{color:#087e68;font-weight:650}.error{color:#bd3345;font-weight:650}
+footer{max-width:1100px;margin:10px auto 0;padding:24px 20px 30px;color:#74819a;font-size:12px;border-top:1px solid #e2e8f2}
+#dashboard .card:first-child{background:linear-gradient(120deg,#fff,#f4f7ff);border-color:#dfe7fa}
+#dashboard .card:first-child h2{border-bottom:0;padding-bottom:0;margin-bottom:5px}
+#dashboard .card:first-child h2:before{display:none}
+#dashboard .card:first-child button{max-width:150px}
+.hidden{display:none!important}
+@media(max-width:680px){
+  header{padding:25px 20px}header h1{font-size:31px}header p{margin-left:0!important}
+  .container{margin:18px auto;padding:0 12px}#auth{grid-template-columns:1fr;gap:14px}
+  .card{padding:18px;border-radius:14px}.grid{grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
+  .stat{padding:15px}th,td{padding:10px;font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+
+
+/* AdVora Black & Gold Luxury Theme — visual styling only; all demo logic/data keys preserved */
+:root{
+  --navy:#090909;--navy2:#171717;--blue:#c9a85a;--teal:#b99545;
+  --ink:#f3eee2;--muted:#b8b0a0;--line:#423823;--surface:#151515;
+  --page:#0b0b0b;--shadow:0 14px 36px rgba(0,0,0,.35);
+}
+html{scroll-behavior:smooth;background:var(--page)}
+body{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  background:radial-gradient(ellipse at 12% 0%,#292211 0,transparent 32%),linear-gradient(180deg,#0b0b0b,#101010 55%,#090909);
+  color:var(--ink);line-height:1.6
+}
+header{
+  position:relative;overflow:hidden;text-align:left;
+  padding:32px max(22px,calc((100% - 1080px)/2));
+  background:linear-gradient(120deg,#050505 0%,#17130b 58%,#302515 100%);
+  border-bottom:2px solid #c9a85a;box-shadow:0 12px 34px #0008
+}
+header:after{
+  content:"";position:absolute;width:270px;height:270px;border:1px solid #d5b96b30;
+  border-radius:50%;right:8%;top:-155px;
+  box-shadow:0 0 0 28px #d5b96b0c,0 0 0 58px #d5b96b08;pointer-events:none
+}
+header h1{position:relative;z-index:1;font-size:clamp(30px,4vw,40px);letter-spacing:1px;font-weight:850;color:#e4c477}
+header h1:before{
+  content:"A";display:inline-grid;place-items:center;width:43px;height:43px;margin-right:12px;
+  border-radius:13px;background:linear-gradient(135deg,#f0d88b,#9d7830);color:#111;
+  font-size:25px;vertical-align:3px;box-shadow:0 5px 18px #0008
+}
+header p{position:relative;z-index:1;margin:7px 0 0 56px!important;color:#d0c4a4!important;font-size:14px;letter-spacing:.4px}
+.container{max-width:1100px;margin:28px auto;padding:0 20px}
+.notice{border-radius:13px;padding:14px 17px;background:#211b0e;border:1px solid #80652c;color:#e7d5a5;box-shadow:0 5px 15px #0003;margin-bottom:22px}
+.card{position:relative;background:linear-gradient(145deg,#181818,#121212);padding:23px;border:1px solid #3a3221;border-radius:17px;margin-bottom:20px;box-shadow:var(--shadow);transition:transform .18s ease,box-shadow .18s ease}
+.card h2{display:flex;align-items:center;gap:10px;font-size:19px;letter-spacing:.1px;color:#e2c16f;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid #332b1b}
+.card h2:before{content:"";display:inline-block;width:4px;height:21px;border-radius:4px;background:linear-gradient(#f0d88b,#9d7830);flex:none}
+#auth{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:stretch}
+#auth .card{margin-bottom:0}
+input,select,textarea{width:100%;padding:13px 14px;margin:7px 0;border:1px solid #49402d;border-radius:10px;background:#0d0d0d;color:#f4eddd;font:inherit;outline:none;transition:border-color .18s,box-shadow .18s}
+input::placeholder,textarea::placeholder{color:#8f8777}
+input:focus,select:focus,textarea:focus{border-color:#c9a85a;box-shadow:0 0 0 3px #c9a85a24;background:#111}
+button{width:100%;padding:12px 16px;margin:7px 0;border:1px solid #d7b96a;border-radius:10px;background:linear-gradient(135deg,#e0c16e,#a78335);color:#15120b;cursor:pointer;font:inherit;font-weight:800;letter-spacing:.15px;box-shadow:0 5px 14px #0004;transition:transform .16s,box-shadow .16s,filter .16s}
+button:hover{opacity:1;filter:brightness(1.08);transform:translateY(-1px);box-shadow:0 8px 18px #0006}
+button:active{transform:translateY(0)}
+button.secondary{background:linear-gradient(135deg,#d4b45e,#8f6e2d);border-color:#e4c879;color:#15120b;box-shadow:0 5px 12px #0004}
+button.danger{background:linear-gradient(135deg,#a63d35,#6f211e);border-color:#c65c50;color:#fff2ed;box-shadow:0 5px 12px #0004}
+button:disabled{background:#39352c;color:#8b8475;border-color:#454033;box-shadow:none;transform:none;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.stat{position:relative;overflow:hidden;padding:19px;border-radius:14px;background:linear-gradient(145deg,#211d14,#171717);border:1px solid #514126;min-width:0}
+.stat:after{content:"";position:absolute;width:70px;height:70px;right:-30px;top:-30px;border-radius:50%;background:#d5b96b12}
+.stat small{display:block;color:#c0b18c;margin-bottom:8px;font-size:12px;font-weight:750;letter-spacing:.65px;text-transform:uppercase}
+.stat strong{position:relative;z-index:1;font-size:clamp(22px,2.5vw,28px);font-weight:850;color:#e4c477;overflow-wrap:anywhere;letter-spacing:-.5px}
+.stat button{position:relative;z-index:1}
+.muted{color:#b4ac9b;font-size:13px;line-height:1.7}
+.linkbox{background:#0e0e0e;padding:14px;border:1px dashed #9a7c3c;border-radius:11px;overflow-wrap:anywhere;font-size:14px;color:#e1c576}
+.tablewrap{overflow-x:auto;border:1px solid #403725;border-radius:12px;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;background:#141414;color:#e9e2d2}
+th,td{padding:12px 13px;border-bottom:1px solid #302a1e;text-align:left;vertical-align:top}
+th{background:#211c12;color:#e1c576;font-size:11px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+tr:last-child td{border-bottom:0}tbody tr:hover{background:#201c14}
+.success{color:#8bd5ad;font-weight:650}.error{color:#ff9b91;font-weight:650}
+footer{max-width:1100px;margin:10px auto 0;padding:24px 20px 30px;color:#958b76;font-size:12px;border-top:1px solid #342c1c}
+#dashboard .card:first-child{background:linear-gradient(120deg,#191919,#211b10);border-color:#6c5528}
+#dashboard .card:first-child h2{border-bottom:0;padding-bottom:0;margin-bottom:5px}
+#dashboard .card:first-child h2:before{display:none}
+#dashboard .card:first-child button{max-width:150px}
+.hidden{display:none!important}
+@media(max-width:680px){
+  header{padding:25px 20px}header h1{font-size:31px}header p{margin-left:0!important}
+  .container{margin:18px auto;padding:0 12px}#auth{grid-template-columns:1fr;gap:14px}
+  .card{padding:18px;border-radius:14px}.grid{grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
+  .stat{padding:15px}th,td{padding:10px;font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+
+</style>
+</head>
+
+<body>
+<header>
+  <h1>AdVora</h1>
+  <p>Demo Rewards & Referral Platform</p>
+</header>
+
+<div class="container">
+
+<div class="notice">
+  <b>Demo Mode:</b> This is a demo testing website. No real money is deposited or paid.
+  Accounts are stored in this browser only. A server and database are required for real users to share data.
+</div>
+
+<section id="auth">
+  <div class="card">
+    <h2>Create Demo Account</h2>
+    <input id="regName" placeholder="Choose username">
+    <input id="regPass" type="password" placeholder="Choose password">
+    <input id="regRef" placeholder="Referral username (optional)">
+    <button onclick="register()">Register Demo Account</button>
+    <p id="regMsg"></p>
+  </div>
+
+  <div class="card">
+    <h2>Login</h2>
+    <input id="loginName" placeholder="Username">
+    <input id="loginPass" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p id="loginMsg"></p>
+  </div>
+</section>
+
+<section id="dashboard" class="hidden">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+      <div>
+        <h2 style="margin-bottom:5px">Welcome, <span id="welcome"></span></h2>
+        <span class="muted">Your AdVora demo dashboard</span>
+      </div>
+      <button style="width:auto" class="danger" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="stat"><small>Package Balance</small><strong id="packageBal">$0.00</strong></div>
+    <div class="stat"><small>Referral Balance</small><strong id="referralBal">$0.00</strong></div>
+    <div class="stat"><small>Active Demo Package</small><strong id="activePackage">$0</strong></div>
+    <div class="stat"><small>Direct Referrals</small><strong id="directCount">0</strong></div>
+  </div>
+
+  <div class="card">
+    <h2>My Referral Link</h2>
+    <p class="muted">Use this link when registering a new demo account.</p>
+    <div class="linkbox" id="myLink"></div>
+    <button class="secondary" onclick="copyReferral()">Copy Referral Link</button>
+    <p id="copyMsg" class="muted"></p>
+  </div>
+
+  <div class="card">
+    <h2>Packages</h2>
+    <p class="muted">Activating a demo package does not require payment and does not generate real money.</p>
+    <div class="grid">
+      <div class="stat"><small>Starter</small><strong>$10</strong><button onclick="buyPackage(10)">Activate Demo</button></div>
+      <div class="stat"><small>Basic</small><strong>$30</strong><button onclick="buyPackage(30)">Activate Demo</button></div>
+      <div class="stat"><small>Standard</small><strong>$50</strong><button onclick="buyPackage(50)">Activate Demo</button></div>
+      <div class="stat"><small>Premium</small><strong>$100</strong><button onclick="buyPackage(100)">Activate Demo</button></div>
+    </div>
+    <p id="packageMsg"></p>
+  </div>
+
+  <div class="card">
+    <h2>Daily Video Rewards</h2>
+    <p>Demo reward: <b>$0.17 per video</b>, maximum 3 per day.</p>
+    <p>Videos completed today: <b id="videoCount">0/3</b></p>
+    <button id="videoBtn" onclick="claimVideo()">Claim Demo Video Reward — $0.17</button>
+    <p id="videoMsg"></p>
+    <p class="muted">This button records a demo reward only; it does not verify that a real video was watched or that real income was earned.</p>
+  </div>
+
+  <div class="card" id="chainRepairCard">
+    <h2>Safe Referral List Repair</h2>
+    <p class="muted">This safe repair rebuilds only the Direct Referrals list. It does not change or delete any account’s referrer, balance, video records, or withdrawal history.</p>
+    <button class="secondary" onclick="repairReferralListsSafe()">Repair Referral Lists (Safe)</button>
+    <p id="chainRepairMsg"></p>
+  </div>
+
+  <div class="card">
+    <h2>Demo Referral Link Fix</h2>
+    <p class="muted">If this account is not linked to a referral, enter the referrer’s username here to fix it. Existing balances will not be deleted.</p>
+    <input id="fixRefName" placeholder="Referrer username (e.g. user2)">
+    <button class="secondary" onclick="fixMyReferral()">Fix My Referral</button>
+    <p id="fixRefMsg"></p>
+  </div>
+
+  <div class="card">
+    <h2>Referral Team</h2>
+    <p class="muted">This list shows demo accounts created in this browser.</p>
+    <h3>Direct Referrals</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Username</th><th>Joined</th><th>Package</th></tr></thead>
+        <tbody id="directTeam"></tbody>
+      </table>
+    </div>
+    <h3>Referral Levels</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Level</th><th>Bonus Rate</th><th>Users in Level</th></tr></thead>
+        <tbody id="levelTeam"></tbody>
+      </table>
+    </div>
+    <p class="muted">Demo referral rates: Level 1 = 10%, Level 2 = 5%, Level 3 = 3%, Level 4 = 1%, Level 5 = 1%. For each video claim, every existing upline receives the applicable percentage bonus plus a separate $0.01 activity bonus. This is a local demo only.</p>
+  </div>
+
+  <div class="card">
+    <h2>Referral Earnings</h2>
+    <p>Referral Balance: <b id="referralBal2">$0.00</b></p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>From User</th><th>Bonus Type</th><th>Demo Bonus</th><th>Date</th></tr></thead>
+        <tbody id="referralRows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Withdraw Demo Balance</h2>
+    <p>Minimum request: <b>$5.00</b>. Withdrawal fee: <b>10% (Upline 5% + Downline 5%)</b>. You receive <b>90%</b>.</p>
+    <p class="muted">Demo distribution: Each existing upline at Levels 1–5 receives 1%, and one account at each existing downline level (Levels 1–5) receives 1%. Shares for empty levels are not redistributed. No real payment is made.</p>
+    <p class="muted">A withdrawal only saves a demo request in this browser. It is not a real payment.</p>
+    <button class="secondary" onclick="testWithdrawalDistribution()">Safe $5 Distribution Preview (No Data Changed)</button>
+    <div id="distributionTestResult" class="notice hidden" style="margin:10px 0;overflow-wrap:anywhere"></div>
+    <button class="danger" onclick="applySafeCommissionTest()">Apply Safe $5 Commission Test (Demo Only — Once Per Account)</button>
+    <p class="muted">This separate test adds $0.05 to each eligible upline/downline account and records a clearly labelled test entry. It does not deduct your balance or create a withdrawal request. It can be applied only once from each initiating account.</p>
+    <div id="commissionTestResult" class="notice hidden" style="margin:10px 0;overflow-wrap:anywhere"></div>
+    <input id="withdrawAmount" type="number" min="5" step="0.01" placeholder="Amount (minimum $5)">
+    <button onclick="withdraw()">Submit Demo Withdrawal</button>
+    <p id="withdrawMsg"></p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Amount</th><th>Total Fee</th><th>Net</th><th>Upline Share</th><th>Downline Share</th><th>Unassigned Fee</th><th>Status</th></tr></thead>
+        <tbody id="withdrawRows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Activity History</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Date</th><th>Activity</th><th>Amount</th></tr></thead>
+        <tbody id="activityRows"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer>AdVora Demo • No real deposits or payouts</footer>
+</div>
+
+<script>
+const DBKEY = "advora_full_demo_v1";
+const SESSIONKEY = "advora_full_demo_session";
+// Keep login sessions separate per browser tab; the demo user database remains unchanged.
+function getSessionName(){ return sessionStorage.getItem(SESSIONKEY) || ""; }
+function setSessionName(name){ sessionStorage.setItem(SESSIONKEY, name); }
+function clearSessionName(){ sessionStorage.removeItem(SESSIONKEY); }
+const rates = [0.10, 0.05, 0.03, 0.01, 0.01];
+
+function loadDB(){
+  try {
+    return JSON.parse(localStorage.getItem(DBKEY)) || {users:{}};
+  } catch(e) {
+    return {users:{}};
+  }
+}
+function saveDB(db){
+  localStorage.setItem(DBKEY, JSON.stringify(db));
+}
+function money(n){
+  return "$" + (Number(n)||0).toFixed(2);
+}
+function moneyPrecise(n){
+  return "$" + (Number(n)||0).toFixed(4);
+}
+function dateNow(){
+  return new Date().toLocaleString();
+}
+function safe(s){
+  return String(s ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+function currentUser(){
+  const name = getSessionName();
+  const db = loadDB();
+  return name && db.users[name] ? db.users[name] : null;
+}
+function msg(id,text,kind){
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = kind || "";
+}
+function makeUser(name,pass,ref){
+  return {
+    name, pass, referrer:ref || "",
+    packageBalance:0, referralBalance:0, activePackage:0,
+    videos:{}, referrals:[], withdrawals:[], activity:[],
+    created:dateNow()
+  };
+}
+function addActivity(user,description,amount){
+  user.activity.unshift({
+    date:dateNow(), description,
+    amount: Number(amount)||0
+  });
+}
+function register(){
+  const name = document.getElementById("regName").value.trim();
+  const pass = document.getElementById("regPass").value;
+  let ref = document.getElementById("regRef").value.trim();
+  const db = loadDB();
+
+  if(!ref){
+    const params = new URLSearchParams(location.search);
+    ref = params.get("ref") || "";
+  }
+  if(!/^[a-zA-Z0-9_]{3,20}$/.test(name)){
+    return msg("regMsg","Username must be 3–20 characters and may contain letters, numbers, or underscores.","error");
+  }
+  if(pass.length < 4){
+    return msg("regMsg","Demo password must be at least 4 characters long.","error");
+  }
+  if(db.users[name]){
+    return msg("regMsg","This username already exists.","error");
+  }
+  if(ref === name){
+    return msg("regMsg","You cannot use your own username as the referrer.","error");
+  }
+  if(ref && !db.users[ref]){
+    return msg("regMsg","This referrer is not present in this browser’s demo data. Create the referrer account first.","error");
+  }
+
+  db.users[name] = makeUser(name,pass,ref);
+  if(ref){
+    db.users[ref].referrals=db.users[ref].referrals||[];
+    if(!db.users[ref].referrals.includes(name)) db.users[ref].referrals.push(name);
+    addActivity(db.users[ref],"New direct referral: "+name,0);
+  }
+  addActivity(db.users[name],"Demo account created",0);
+  saveDB(db);
+  setSessionName(name);
+  document.getElementById("regPass").value = "";
+  showDashboard();
+}
+function login(){
+  const enteredName = document.getElementById("loginName").value.trim();
+  const pass = document.getElementById("loginPass").value;
+  const db = loadDB();
+
+  // Find the saved account without being sensitive to username capitalization.
+  // Keep the original saved username key so existing balances and referrals remain linked.
+  const savedName = Object.keys(db.users || {}).find(
+    key => key.toLowerCase() === enteredName.toLowerCase()
+  );
+  const savedUser = savedName ? db.users[savedName] : null;
+
+  if(!savedUser || savedUser.pass !== pass){
+    return msg("loginMsg","Incorrect username or password. Check the username spelling and password, then try again.","error");
+  }
+  setSessionName(savedName);
+  document.getElementById("loginPass").value = "";
+  showDashboard();
+}
+function logout(){
+  clearSessionName();
+  document.getElementById("dashboard").classList.add("hidden");
+  document.getElementById("auth").classList.remove("hidden");
+}
+function showDashboard(){
+  const user = currentUser();
+  if(!user) return;
+  document.getElementById("auth").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+  const repairCard=document.getElementById("chainRepairCard");
+  if(repairCard) repairCard.classList.toggle("hidden", user.name !== "ahmed3");
+  render();
+}
+function referralURL(name){
+  const url = new URL(location.href);
+  url.search = "";
+  url.hash = "";
+  url.searchParams.set("ref",name);
+  return url.href;
+}
+function copyReferral(){
+  const user = currentUser();
+  if(!user) return;
+  const link = referralURL(user.name);
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(link).then(
+      () => msg("copyMsg","Referral link copied.","success"),
+      () => msg("copyMsg","Select and copy this link manually.")
+    );
+  } else {
+    msg("copyMsg","Select the link with your mouse and press Ctrl+C.");
+  }
+}
+function buyPackage(price){
+  const user = currentUser();
+  if(!user) return;
+  if(user.activePackage >= price){
+    return msg("packageMsg","You already have an equal or larger demo package activated.");
+  }
+  user.activePackage = price;
+  addActivity(user,"$"+price+" Demo Package activated (no payment)",0);
+  saveDB(loadDBWithUser(user));
+  render();
+  msg("packageMsg","$"+price+" Demo package activated. No payment was taken.","success");
+}
+function loadDBWithUser(user){
+  const db = loadDB();
+  db.users[user.name] = user;
+  return db;
+}
+function dayKey(){
+  const d = new Date();
+  return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+}
+function countVideos(user){
+  return Number(user.videos[dayKey()] || 0);
+}
+function ancestors(db,user){
+  const list=[];
+  const seen=new Set([user.name]);
+  let ref=user.referrer;
+  for(let i=0;i<5 && ref;i++){
+    if(seen.has(ref)) break; // protect against a broken referral loop
+    const u=db.users[ref];
+    if(!u) break;
+    list.push(u);
+    seen.add(u.name);
+    ref=u.referrer;
+  }
+  return list;
+}
+function claimVideo(){
+  const user = currentUser();
+  if(!user) return;
+  if(countVideos(user) >= 3){
+    return msg("videoMsg","You have completed all 3 videos for today.","error");
+  }
+  const db=loadDB();
+  const me=db.users[user.name];
+  me.videos[dayKey()] = countVideos(me)+1;
+  me.packageBalance = Number(me.packageBalance||0)+0.17;
+  addActivity(me,"Demo video reward",0.17);
+
+  const up=ancestors(db,me);
+  up.forEach((u,i)=>{
+    // Percentage commission based on the $0.17 video reward.
+    const bonus=Math.round(0.17*rates[i]*10000)/10000;
+    u.referralBalance=Number(u.referralBalance||0)+bonus;
+    u.activity=u.activity||[];
+    u.referralRecords=u.referralRecords||[];
+    u.referralRecords.unshift({
+      from:me.name,level:i+1,type:"Level "+(i+1)+" commission",amount:bonus,date:dateNow()
+    });
+    addActivity(u,"Level "+(i+1)+" demo referral commission from "+me.name,bonus);
+
+    // Separate $0.01 demo activity bonus for each upline when this downline claims a video.
+    const activityBonus=0.01;
+    u.referralBalance=Number(u.referralBalance||0)+activityBonus;
+    u.referralRecords.unshift({
+      from:me.name,level:i+1,type:"Activity bonus",amount:activityBonus,date:dateNow()
+    });
+    addActivity(u,"$0.01 activity bonus from downline "+me.name,activityBonus);
+  });
+  saveDB(db);
+  render();
+  msg("videoMsg","Demo reward of $0.17 added. Each upline’s commission and separate $0.01 activity bonus were also recorded.","success");
+}
+function repairReferralListsSafe(){
+  const sessionName=getSessionName();
+  if(sessionName !== "ahmed3") {
+    return msg("chainRepairMsg","Run this safe repair only while logged in to the ahmed3 account.","error");
+  }
+  const db=loadDB();
+  // Rebuild only cached direct-referral lists from existing referrer pointers.
+  // Do not alter referrer links, balances, earnings, videos, or withdrawal history.
+  Object.values(db.users).forEach(u=>{u.referrals=[];});
+  Object.values(db.users).forEach(u=>{
+    const ref=String(u.referrer||"");
+    if(ref && ref!==u.name && db.users[ref]){
+      db.users[ref].referrals.push(u.name);
+    }
+  });
+  saveDB(db);
+  render();
+  msg("chainRepairMsg","Success! The Direct Referrals list was rebuilt from the existing referrer links. No referrer link, balance, or history was changed.","success");
+}
+
+function fixMyReferral(){
+  const sessionName=getSessionName();
+  const db=loadDB();
+  const me=sessionName ? db.users[sessionName] : null;
+  const refName=document.getElementById("fixRefName").value.trim();
+  if(!me) return msg("fixRefMsg","Please log in first.","error");
+  if(!refName) return msg("fixRefMsg","Enter the referrer username, e.g. user2.","error");
+  if(refName===me.name) return msg("fixRefMsg","You cannot set yourself as your own referrer.","error");
+  const refUser=db.users[refName];
+  if(!refUser) return msg("fixRefMsg","Username not found. First check that the user2 account exists in this browser.","error");
+
+  // Avoid creating a referral loop.
+  let cursor=refUser;
+  const seen=new Set();
+  while(cursor && cursor.referrer){
+    if(cursor.referrer===me.name) return msg("fixRefMsg","This link would create a referral loop, so it was not applied.","error");
+    if(seen.has(cursor.name)) break;
+    seen.add(cursor.name);
+    cursor=db.users[cursor.referrer];
+  }
+
+  // Remove the current user from any old referrer's direct list.
+  const oldRef=me.referrer;
+  if(oldRef && db.users[oldRef]){
+    db.users[oldRef].referrals=(db.users[oldRef].referrals||[]).filter(n=>n!==me.name);
+  }
+  me.referrer=refName;
+  // Rebuild cached direct-referral lists from referrer pointers without touching balances/history.
+  Object.values(db.users).forEach(u=>{u.referrals=[];});
+  Object.values(db.users).forEach(u=>{
+    if(u.referrer && u.referrer!==u.name && db.users[u.referrer]){
+      db.users[u.referrer].referrals.push(u.name);
+    }
+  });
+  addActivity(me,"Demo referral linked to "+refName,0);
+  addActivity(refUser,"Direct referral linked: "+me.name,0);
+  saveDB(db);
+  document.getElementById("fixRefName").value="";
+  render();
+  msg("fixRefMsg","Success! Your account has been linked to "+refName+". Now log in as user2 and check Direct Referrals.","success");
+}
+
+function levelCounts(db,user){
+  let current=[user.name];
+  const counts=[];
+  const visited=new Set([user.name]);
+  for(let level=1;level<=5;level++){
+    const next=[];
+    Object.values(db.users).forEach(u=>{
+      if(current.includes(u.referrer) && !visited.has(u.name)){
+        next.push(u.name);
+        visited.add(u.name);
+      }
+    });
+    counts.push(next.length);
+    current=next;
+  }
+  return counts;
+}
+function downlineAtEachLevel(db,user){
+  // One eligible recipient at each generation; empty levels are not redistributed.
+  let parents=[user.name];
+  const selected=[];
+  const visited=new Set([user.name]);
+  for(let level=1;level<=5;level++){
+    const children=Object.values(db.users).filter(u=>parents.includes(u.referrer) && !visited.has(u.name));
+    if(!children.length) break;
+    selected.push({user:children[0],level});
+    children.forEach(u=>visited.add(u.name));
+    parents=children.map(u=>u.name);
+  }
+  return selected;
+}
+function testWithdrawalDistribution(){
+  const user=currentUser();
+  if(!user) return;
+  const db=loadDB();
+  const me=db.users[user.name];
+  if(!me) return;
+  // Read-only $5 calculation: no balances or histories are modified.
+  const testAmount=5;
+  const fee=0.50;
+  const share=0.05;
+  const uplines=ancestors(db,me).slice(0,5);
+  const downlines=downlineAtEachLevel(db,me);
+  const assigned=Math.round((uplines.length+downlines.length)*share*100)/100;
+  const unassigned=Math.max(0,Math.round((fee-assigned)*100)/100);
+  const rows=[];
+  uplines.forEach((u,i)=>rows.push("<li>Upline Level "+(i+1)+": <b>"+safe(u.name)+"</b> — "+money(share)+"</li>"));
+  downlines.forEach(item=>rows.push("<li>Downline Level "+item.level+": <b>"+safe(item.user.name)+"</b> — "+money(share)+"</li>"));
+  const result=document.getElementById("distributionTestResult");
+  if(!result) return;
+  result.classList.remove("hidden");
+  result.innerHTML="<b>Safe $5 Demo Simulation — no data changed</b><br>"+
+    "Withdrawal amount: "+money(testAmount)+"<br>"+
+    "Total fee (10%): "+money(fee)+"<br>"+
+    "Upline shares: "+money(uplines.length*share)+" ("+uplines.length+" eligible level(s))<br>"+
+    "Downline shares: "+money(downlines.length*share)+" ("+downlines.length+" eligible level(s))<br>"+
+    "Total assigned: "+money(assigned)+"<br>"+
+    "Unassigned fee (empty levels): "+money(unassigned)+"<br>"+
+    "User net amount: "+money(testAmount-fee)+"<br>"+
+    (rows.length?"<br><b>Recipients</b><ul>"+rows.join("")+"</ul>":"<br>No eligible recipients found.")+"<br><b>Note:</b> Calculation only; no balance, account, or history was changed.";
+}
+function applySafeCommissionTest(){
+  const user=currentUser();
+  if(!user) return;
+  const db=loadDB();
+  const me=db.users[user.name];
+  if(!me) return;
+  const result=document.getElementById("commissionTestResult");
+  if(me.safeCommissionTestDone){
+    result.classList.remove("hidden");
+    result.textContent="This account has already applied its one-time Safe $5 Commission Test. No further changes were made.";
+    return;
+  }
+  const uplines=ancestors(db,me).slice(0,5);
+  const downlines=downlineAtEachLevel(db,me);
+  if(!uplines.length && !downlines.length){
+    result.classList.remove("hidden");
+    result.textContent="No eligible upline or downline accounts were found. No data was changed.";
+    return;
+  }
+  const recipientCount=uplines.length+downlines.length;
+  const warning="This DEMO TEST will add $0.05 to each of "+recipientCount+" eligible recipient account(s), and write test entries to their referral/activity histories. It will NOT deduct your balance or create a withdrawal request. This can only be done once from this account. Continue?";
+  if(!confirm(warning)) return;
+  const share=0.05;
+  const distributions=[];
+  function creditTest(recipient,level,group){
+    recipient.referralBalance=Number(recipient.referralBalance||0)+share;
+    recipient.referralRecords=recipient.referralRecords||[];
+    const type="SAFE COMMISSION TEST — $5 simulation ("+group+" Level "+level+")";
+    recipient.referralRecords.unshift({from:me.name,level,type,amount:share,date:dateNow()});
+    addActivity(recipient,type+" from "+me.name,share);
+    distributions.push({username:recipient.name,level,group});
+  }
+  uplines.forEach((u,i)=>creditTest(u,i+1,"Upline"));
+  downlines.forEach(item=>creditTest(item.user,item.level,"Downline"));
+  me.safeCommissionTestDone=true;
+  addActivity(me,"Safe $5 commission distribution test run (no withdrawal; no balance deducted)",0);
+  saveDB(db);
+  render();
+  result.classList.remove("hidden");
+  result.innerHTML="<b>Safe Commission Test completed — demo only</b><br>Initiating account: <b>"+safe(me.name)+"</b><br>Eligible uplines: "+uplines.length+"; credited: "+money(uplines.length*share)+"<br>Eligible downlines: "+downlines.length+"; credited: "+money(downlines.length*share)+"<br>Total credited to recipients: <b>"+money(distributions.length*share)+"</b><br><b>Your balance was not deducted. No withdrawal request was created.</b><br><br><b>Recipients</b><ul>"+distributions.map(d=>"<li>"+safe(d.group)+" Level "+d.level+": <b>"+safe(d.username)+"</b> — "+money(share)+"</li>").join("")+"</ul><b>Note:</b> Recipient demo balances and histories were changed by this test; all entries are labelled as a Safe Commission Test.";
+}
+
+function withdraw(){
+  const user=currentUser();
+  if(!user) return;
+  const amount=Number(document.getElementById("withdrawAmount").value);
+  if(!Number.isFinite(amount) || amount<5){
+    return msg("withdrawMsg","The minimum withdrawal is $5.00.","error");
+  }
+  const db=loadDB();
+  const me=db.users[user.name];
+  const total=Number(me.packageBalance||0)+Number(me.referralBalance||0);
+  if(amount>total){
+    return msg("withdrawMsg","Your total available demo balance is "+money(total)+".","error");
+  }
+  // Deduct the gross request from the user's demo balances.
+  let remaining=amount;
+  const fromPackage=Math.min(Number(me.packageBalance||0),remaining);
+  me.packageBalance=Number(me.packageBalance||0)-fromPackage;
+  remaining-=fromPackage;
+  if(remaining>0) me.referralBalance=Number(me.referralBalance||0)-remaining;
+
+  const fee=Math.round(amount*0.10*100)/100;
+  const net=Math.round((amount-fee)*100)/100;
+  const share=Math.round(amount*0.01*100)/100;
+  const uplines=ancestors(db,me).slice(0,5);
+  const downlines=downlineAtEachLevel(db,me);
+  const distributions=[];
+  function creditShare(recipient, level, group){
+    if(!recipient || share<=0) return;
+    recipient.referralBalance=Number(recipient.referralBalance||0)+share;
+    recipient.referralRecords=recipient.referralRecords||[];
+    const type="Withdrawal fee share ("+group+" Level "+level+")";
+    recipient.referralRecords.unshift({from:me.name,level,type,amount:share,date:dateNow()});
+    addActivity(recipient,type+" from "+me.name,share);
+    distributions.push({username:recipient.name,level,group,amount:share});
+  }
+  uplines.forEach((u,i)=>creditShare(u,i+1,"Upline"));
+  downlines.forEach(item=>creditShare(item.user,item.level,"Downline"));
+  const uplineFee=Math.round(uplines.length*share*100)/100;
+  const downlineFee=Math.round(downlines.length*share*100)/100;
+  const actuallyAssigned=Math.round((uplineFee+downlineFee)*100)/100;
+  const unassignedFee=Math.max(0,Math.round((fee-actuallyAssigned)*100)/100);
+  me.withdrawals.unshift({
+    amount,fee,net,uplineFee,downlineFee,unassignedFee,
+    distributions,status:"Demo request submitted",date:dateNow()
+  });
+  addActivity(me,"Demo withdrawal requested (10% fee: Upline 5% + Downline 5%)",-amount);
+  saveDB(db);
+  document.getElementById("withdrawAmount").value="";
+  render();
+  msg("withdrawMsg","Demo request saved. Gross amount: "+money(amount)+", total fee: "+money(fee)+", Upline assigned: "+money(uplineFee)+", Downline assigned: "+money(downlineFee)+", unassigned: "+money(unassignedFee)+", net: "+money(net)+". No real payment was made.","success");
+}
+function render(){
+  const db=loadDB();
+  const user=db.users[getSessionName()];
+  if(!user) return;
+  document.getElementById("welcome").textContent=user.name;
+  document.getElementById("packageBal").textContent=money(user.packageBalance);
+  document.getElementById("referralBal").textContent=money(user.referralBalance);
+  document.getElementById("referralBal2").textContent=money(user.referralBalance);
+  document.getElementById("activePackage").textContent=money(user.activePackage);
+  document.getElementById("directCount").textContent=(user.referrals||[]).length;
+  document.getElementById("myLink").textContent=referralURL(user.name);
+  document.getElementById("videoCount").textContent=countVideos(user)+"/3";
+  document.getElementById("videoBtn").disabled=countVideos(user)>=3;
+
+  const direct=document.getElementById("directTeam");
+  const children=(user.referrals||[]).map(n=>db.users[n]).filter(Boolean);
+  direct.innerHTML=children.length ? children.map(u=>
+    "<tr><td>"+safe(u.name)+"</td><td>"+safe(u.created)+"</td><td>"+money(u.activePackage)+"</td></tr>"
+  ).join("") : '<tr><td colspan="3">No direct referrals yet.</td></tr>';
+
+  const counts=levelCounts(db,user);
+  document.getElementById("levelTeam").innerHTML=rates.map((rate,i)=>
+    "<tr><td>Level "+(i+1)+"</td><td>"+(rate*100)+"%</td><td>"+counts[i]+"</td></tr>"
+  ).join("");
+
+  const records=user.referralRecords||[];
+  document.getElementById("referralRows").innerHTML=records.length ? records.map(r=>
+    "<tr><td>"+safe(r.from)+"</td><td>"+safe(r.type || ("Level "+r.level+" commission"))+"</td><td>"+moneyPrecise(r.amount)+"</td><td>"+safe(r.date)+"</td></tr>"
+  ).join("") : '<tr><td colspan="4">No referral bonuses yet.</td></tr>';
+
+  document.getElementById("withdrawRows").innerHTML=(user.withdrawals||[]).length ?
+    user.withdrawals.map(w=>"<tr><td>"+money(w.amount)+"</td><td>"+money(w.fee)+"</td><td>"+money(w.net)+"</td><td>"+money(w.uplineFee||0)+"</td><td>"+money(w.downlineFee||0)+"</td><td>"+money(w.unassignedFee||0)+"</td><td>"+safe(w.status)+"</td></tr>").join("")
+    : '<tr><td colspan="7">No withdrawal requests yet.</td></tr>';
+
+  document.getElementById("activityRows").innerHTML=(user.activity||[]).length ?
+    user.activity.map(a=>"<tr><td>"+safe(a.date)+"</td><td>"+safe(a.description)+"</td><td>"+money(a.amount)+"</td></tr>").join("")
+    : '<tr><td colspan="3">No activity yet.</td></tr>';
+}
+function migrateOldReferralHistory(){
+  const db=loadDB();
+  if(db.referralHistoryMigrationV2) return;
+  let changed=false;
+  Object.values(db.users||{}).forEach(user=>{
+    const records=user.referralRecords||[];
+    const groups={};
+    records.forEach((r,index)=>{
+      // Only repair legacy rows that have no type and were saved as $0.01.
+      if(!r.type && Number(r.amount)===0.01 && r.from && r.date && Number(r.level)>=1 && Number(r.level)<=5){
+        const key=[r.from,r.date,r.level].join('|');
+        (groups[key] ||= []).push(index);
+      }
+    });
+    Object.entries(groups).forEach(([key,indices])=>{
+      if(indices.length!==2) return;
+      const commissionIndex=indices[0];
+      const activityIndex=indices[1];
+      const commissionRecord=records[commissionIndex];
+      const activityRecord=records[activityIndex];
+      const rate=rates[Number(commissionRecord.level)-1];
+      const correctCommission=Math.round(0.17*rate*10000)/10000;
+      commissionRecord.type='Level '+commissionRecord.level+' commission';
+      commissionRecord.amount=correctCommission;
+      activityRecord.type='Activity bonus';
+      activityRecord.amount=0.01;
+      // Bring the stored balance in line with the corrected legacy entries.
+      user.referralBalance=Math.max(0, Number(user.referralBalance||0) - 0.01 + correctCommission);
+      changed=true;
+    });
+  });
+  db.referralHistoryMigrationV2=true;
+  if(changed || !db.referralHistoryMigrationV2) saveDB(db);
+  else saveDB(db);
+}
+
+(function init(){
+  migrateOldReferralHistory();
+  const params=new URLSearchParams(location.search);
+  const ref=params.get("ref");
+  if(ref && document.getElementById("regRef")) {
+    document.getElementById("regRef").value=ref;
+  }
+  // A referral link must show the registration/login screen, not the inviter's dashboard.
+  // The referral field is prefilled above, and existing demo accounts/balances are not deleted.
+  if(ref) {
+    clearSessionName();
+    document.getElementById("dashboard").classList.add("hidden");
+    document.getElementById("auth").classList.remove("hidden");
+  } else if(currentUser()) {
+    showDashboard();
+  }
+  const repairCard=document.getElementById("chainRepairCard");
+  if(repairCard && getSessionName()!=="ahmed3") repairCard.classList.add("hidden");
+})();
+</script>
+</body>
+</html>
