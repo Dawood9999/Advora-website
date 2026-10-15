@@ -207,6 +207,22 @@ footer{max-width:1100px;margin:10px auto 0;padding:24px 20px 30px;color:#958b76;
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
 
+
+/* Referral Tree — visual only; reads existing referrer links */
+.referral-tree{margin-top:14px;padding:18px;border:1px solid #514126;border-radius:14px;background:linear-gradient(145deg,#17150f,#101010);overflow-x:auto}
+.tree-root-wrap{display:flex;justify-content:center;margin-bottom:22px;position:relative}
+.tree-root{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border:1px solid #d7b96a;border-radius:12px;background:linear-gradient(135deg,#302515,#15120b);color:#f0d88b;font-weight:800;box-shadow:0 5px 18px #0005}
+.tree-root-wrap:after{content:"";position:absolute;top:100%;height:22px;border-left:2px solid #9b7c3c}
+.tree-teams{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;align-items:start}
+.tree-team{min-width:0;border:1px solid #493b23;border-radius:13px;background:#151515;padding:12px}
+.tree-team-title{color:#e3c36f;font-weight:800;text-align:center;padding:4px 6px 12px;border-bottom:1px solid #3a3020;margin-bottom:12px}
+.tree-node{position:relative;margin:8px 0 0;padding:10px;border:1px solid #514126;border-radius:10px;background:#211d14;color:#f0e8d7;overflow-wrap:anywhere}
+.tree-node-name{font-weight:750;color:#e4c477}
+.tree-node-meta{font-size:11px;color:#b8b0a0;margin-top:3px}
+.tree-children{margin:10px 0 0 12px;padding-left:12px;border-left:2px solid #66512d}
+.tree-empty{padding:12px;border:1px dashed #514126;border-radius:10px;color:#b8b0a0;text-align:center;font-size:13px}
+@media(max-width:520px){.referral-tree{padding:10px}.tree-teams{grid-template-columns:1fr}.tree-node{padding:9px}}
+
 </style>
 </head>
 
@@ -321,6 +337,9 @@ footer{max-width:1100px;margin:10px auto 0;padding:24px 20px 30px;color:#958b76;
         <tbody id="directTeam"></tbody>
       </table>
     </div>
+    <h3>Referral Tree</h3>
+    <p class="muted">Each direct referral of your account starts a separate team. Expandable-looking branches show the existing referral structure; no referral links or balances are changed.</p>
+    <div id="referralTree" class="referral-tree"><div class="tree-empty">Loading referral tree…</div></div>
     <h3>Referral Levels</h3>
     <div class="tablewrap">
       <table>
@@ -856,6 +875,31 @@ function withdraw(){
   render();
   msg("withdrawMsg","Demo request saved. Gross amount: "+money(amount)+", total fee: "+money(fee)+", Upline assigned: "+money(uplineFee)+", Downline assigned: "+money(downlineFee)+", unassigned: "+money(unassignedFee)+", net: "+money(net)+". No real payment was made.","success");
 }
+function renderReferralTree(db,user){
+  const target=document.getElementById("referralTree");
+  if(!target) return;
+  const allUsers=Object.values(db.users||{});
+  const childrenOf=(name)=>allUsers
+    .filter(u=>String(u.referrer||"")===name && u.name!==name)
+    .sort((a,b)=>String(a.created||"").localeCompare(String(b.created||"")) || String(a.name).localeCompare(String(b.name)));
+  const visited=new Set([user.name]);
+  function nodeHTML(u,depth){
+    if(visited.has(u.name)) return "";
+    visited.add(u.name);
+    const kids=depth<5 ? childrenOf(u.name).filter(k=>!visited.has(k.name)) : [];
+    return '<div class="tree-node"><div class="tree-node-name">'+safe(u.name)+'</div>'+
+      '<div class="tree-node-meta">Level '+depth+' · Package '+money(u.activePackage||0)+'</div>'+
+      (kids.length?'<div class="tree-children">'+kids.map(k=>nodeHTML(k,depth+1)).join("")+'</div>':'')+
+      '</div>';
+  }
+  const direct=childrenOf(user.name);
+  const teamLetter=(index)=>{let n=index+1,label="";while(n>0){n--;label=String.fromCharCode(65+n%26)+label;n=Math.floor(n/26);}return label;};
+  target.innerHTML='<div class="tree-root-wrap"><div class="tree-root">♛ '+safe(user.name)+' <span style="font-size:11px;font-weight:500;color:#d0c4a4">MAIN ACCOUNT</span></div></div>'+
+    (direct.length?'<div class="tree-teams">'+direct.map((child,index)=>{
+      visited.clear();visited.add(user.name);
+      return '<section class="tree-team"><div class="tree-team-title">Team '+teamLetter(index)+'</div>'+nodeHTML(child,1)+'</section>';
+    }).join("")+'</div>':'<div class="tree-empty">No direct referrals yet. Each new direct referral will create a separate team.</div>');
+}
 function render(){
   const db=loadDB();
   const user=db.users[getSessionName()];
@@ -875,6 +919,7 @@ function render(){
   direct.innerHTML=children.length ? children.map(u=>
     "<tr><td>"+safe(u.name)+"</td><td>"+safe(u.created)+"</td><td>"+money(u.activePackage)+"</td></tr>"
   ).join("") : '<tr><td colspan="3">No direct referrals yet.</td></tr>';
+  renderReferralTree(db,user);
 
   const counts=levelCounts(db,user);
   document.getElementById("levelTeam").innerHTML=rates.map((rate,i)=>
