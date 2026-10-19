@@ -223,16 +223,108 @@ footer{max-width:1100px;margin:10px auto 0;padding:24px 20px 30px;color:#958b76;
 .tree-empty{padding:12px;border:1px dashed #514126;border-radius:10px;color:#b8b0a0;text-align:center;font-size:13px}
 @media(max-width:520px){.referral-tree{padding:10px}.tree-teams{grid-template-columns:1fr}.tree-node{padding:9px}}
 
+
+/* AdVora homepage refresh — presentation only */
+.site-header{padding:0!important;background:linear-gradient(115deg,#09152f 0%,#142b58 60%,#344fc1 100%)!important;border-bottom:3px solid #24c7b0;box-shadow:0 12px 34px #0b163026}
+.site-header:after{right:8%;top:-170px;border-color:#ffffff18;box-shadow:0 0 0 28px #ffffff06,0 0 0 58px #ffffff05}
+.header-inner{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:23px 20px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand-lockup{display:flex;align-items:center;gap:13px}
+.brand-mark{display:grid;place-items:center;width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,#35d8c0,#5b7cff);color:#fff;font-size:28px;font-weight:900;box-shadow:0 8px 20px #0003}
+.site-header .brand-lockup h1{margin:0;color:#fff;font-size:31px;line-height:1;letter-spacing:-1px}
+.site-header .brand-lockup p{margin:7px 0 0!important;color:#b9d2ff!important;font-size:10px!important;font-weight:800;letter-spacing:2.3px}
+.site-header .brand-lockup p span{color:#36d5bd}
+.header-pill{display:flex;align-items:center;gap:9px;padding:10px 14px;border:1px solid #ffffff30;border-radius:999px;color:#dce8ff;font-size:10px;font-weight:800;letter-spacing:1.3px;background:#ffffff0c}
+.status-dot,.chip-dot{width:7px;height:7px;border-radius:50%;background:#38d9b8;box-shadow:0 0 0 4px #38d9b822}
+.home-hero{position:relative;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);gap:34px;align-items:center;min-height:460px;margin:8px 0 24px;padding:46px 42px;overflow:hidden;border-radius:26px;background:radial-gradient(ellipse at 82% 45%,#293e7c 0,transparent 38%),linear-gradient(120deg,#0b1733 0%,#12264e 60%,#1c3671 100%);box-shadow:0 22px 50px #12234c25;color:#fff}
+.home-hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(#ffffff06 1px,transparent 1px),linear-gradient(90deg,#ffffff06 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(90deg,transparent,#000 60%);pointer-events:none}
+.hero-copy,.hero-art{position:relative;z-index:1;min-width:0}
+.eyebrow{display:flex;align-items:center;gap:10px;color:#8ce8dc;font-size:10px;font-weight:850;letter-spacing:1.7px;line-height:1.6}
+.eyebrow-line{width:25px;height:2px;background:#36d4bd;border-radius:4px}
+.hero-copy h2{margin:22px 0 15px!important;display:block!important;border:0!important;padding:0!important;color:#fff!important;font-size:clamp(34px,4vw,52px)!important;line-height:1.08;letter-spacing:-1.8px;font-weight:850}
+.hero-copy h2:before{display:none!important}
+.hero-copy h2 span{color:#5de0ca}
+.hero-description{max-width:470px;margin:0;color:#c5d2ef;font-size:14px;line-height:1.9}
+.hero-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:26px}
+.hero-primary{display:inline-flex;align-items:center;gap:22px;padding:13px 18px;border-radius:11px;background:linear-gradient(135deg,#32d7be,#1ab49f);color:#06253a;text-decoration:none;font-weight:850;font-size:13px;box-shadow:0 8px 22px #20cbb333;transition:transform .18s,box-shadow .18s}
+.hero-primary:hover{transform:translateY(-2px);box-shadow:0 12px 26px #20cbb34a}
+.hero-primary span{font-size:18px}
+.hero-secondary{display:flex;align-items:center;gap:8px;color:#d5e0f8;font-size:11px;font-weight:650}
+.hero-check{display:grid;place-items:center;width:19px;height:19px;border-radius:50%;background:#ffffff16;color:#6be2cb}
+.hero-features{display:flex;gap:18px;flex-wrap:wrap;margin-top:34px;padding-top:22px;border-top:1px solid #ffffff20}
+.hero-features>div{display:flex;align-items:center;gap:9px;min-width:120px}
+.feature-icon{display:grid;place-items:center;width:32px;height:32px;border:1px solid #ffffff25;border-radius:10px;background:#ffffff0c;color:#67e1ce;font-size:15px}
+.hero-features b,.hero-features small{display:block}
+.hero-features b{color:#f5f8ff;font-size:10px}
+.hero-features small{margin-top:3px;color:#9eafd2;font-size:9px}
+.hero-art{display:flex;align-items:center;justify-content:center;min-height:320px}
+.art-glow{position:absolute;width:280px;height:280px;border-radius:50%;background:#4e68e9;filter:blur(65px);opacity:.25}
+.preview-window{position:relative;width:min(100%,360px);padding:17px;border:1px solid #ffffff30;border-radius:19px;background:linear-gradient(145deg,#ffffff18,#ffffff09);box-shadow:0 25px 55px #0004;backdrop-filter:blur(12px);transform:rotate(2deg)}
+.preview-top{display:flex;align-items:center;gap:9px;padding-bottom:15px;border-bottom:1px solid #ffffff1a;color:#aebfe3;font-size:8px;font-weight:850;letter-spacing:1.2px}
+.preview-dots{display:flex;gap:4px}.preview-dots i{width:5px;height:5px;border-radius:50%;background:#7890bd}.preview-dots i:first-child{background:#51d7bf}
+.preview-top>span:nth-of-type(1){margin-left:3px}.preview-live{margin-left:auto;padding:4px 7px;border-radius:5px;background:#37d4b51c;color:#65e5d0;font-size:8px}
+.preview-welcome{display:flex;flex-direction:column;gap:5px;padding:20px 2px 15px}
+.preview-welcome small,.preview-balance small{color:#8fa5ce;font-size:8px;font-weight:850;letter-spacing:1.4px}
+.preview-welcome strong{color:#fff;font-size:20px;letter-spacing:-.5px}
+.preview-welcome>span{color:#b3c2df;font-size:10px}
+.preview-balance{display:flex;align-items:center;justify-content:space-between;padding:16px;border:1px solid #ffffff20;border-radius:12px;background:linear-gradient(120deg,#ffffff13,#ffffff06)}
+.preview-balance strong{display:block;margin-top:6px;color:#fff;font-size:29px;letter-spacing:-1px}
+.balance-symbol{display:grid;place-items:center;width:37px;height:37px;border-radius:11px;background:#3bd7bf22;color:#6ce6d3;font-size:21px}
+.preview-bars{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.preview-bars>div{padding:12px;border:1px solid #ffffff18;border-radius:10px;background:#ffffff08}
+.preview-bars span,.preview-bars b{display:block}.preview-bars span{color:#9fb1d5;font-size:8px}.preview-bars b{margin-top:6px;color:#e7efff;font-size:10px}
+.preview-bars i{display:block;height:4px;margin-top:11px;border-radius:4px;background:#ffffff17;overflow:hidden}.preview-bars em{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#38d7bd,#6882ff)}
+.preview-foot{display:flex;align-items:center;gap:9px;margin-top:13px;padding-top:13px;border-top:1px solid #ffffff1a}
+.preview-avatar{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,#3bd9bf,#5e7dff);color:#fff;font-weight:900}
+.preview-foot b,.preview-foot small{display:block}.preview-foot b{color:#f3f6ff;font-size:9px}.preview-foot small{margin-top:3px;color:#9eafd2;font-size:8px}.preview-arrow{margin-left:auto;color:#68e2cf;font-size:16px}
+.floating-chip{position:absolute;display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid #ffffff30;border-radius:10px;background:#172b56eF;color:#e6edff;box-shadow:0 12px 26px #0003;font-size:9px;font-weight:750;white-space:nowrap}
+.chip-top{top:13px;right:-6px}.chip-top>span{color:#63e4d0;font-size:15px}.chip-bottom{bottom:5px;left:-8px}.chip-bottom .chip-dot{width:6px;height:6px}
+#auth{scroll-margin-top:20px}
+@media(max-width:850px){.home-hero{grid-template-columns:1fr;gap:16px;padding:36px 30px}.hero-art{min-height:330px}.hero-copy h2{font-size:42px!important}.chip-top{right:0}.chip-bottom{left:0}}
+@media(max-width:520px){.header-inner{padding:19px 16px}.site-header .brand-lockup h1{font-size:27px}.brand-mark{width:42px;height:42px}.header-pill{padding:8px 10px;font-size:8px;letter-spacing:.8px}.home-hero{padding:30px 21px;border-radius:20px;min-height:0}.eyebrow{font-size:8px;letter-spacing:1px}.hero-copy h2{font-size:36px!important;letter-spacing:-1.2px;margin-top:18px!important}.hero-description{font-size:13px}.hero-features{gap:14px}.hero-art{min-height:300px}.preview-window{padding:13px}.chip-top{top:0;right:-3px}.chip-bottom{bottom:-3px;left:-3px}.floating-chip{font-size:8px;padding:8px 9px}.notice{font-size:12px}}
+
 </style>
 </head>
 
 <body>
-<header>
-  <h1>AdVora</h1>
-  <p>Demo Rewards & Referral Platform</p>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand-lockup">
+      <span class="brand-mark">A</span>
+      <div><h1>AdVora</h1><p>WATCH <span>•</span> EARN <span>•</span> GROW</p></div>
+    </div>
+    <div class="header-pill"><span class="status-dot"></span> DEMO EXPERIENCE</div>
+  </div>
 </header>
 
 <div class="container">
+<section id="homeHero" class="home-hero">
+  <div class="hero-copy">
+    <div class="eyebrow"><span class="eyebrow-line"></span> YOUR REWARDS JOURNEY STARTS HERE</div>
+    <h2>Turn your time into<br><span>new possibilities.</span></h2>
+    <p class="hero-description">Explore video rewards, grow your referral community, and track your progress — all in one simple dashboard.</p>
+    <div class="hero-actions">
+      <a href="#auth" class="hero-primary">Get Started <span aria-hidden="true">↗</span></a>
+      <span class="hero-secondary"><span class="hero-check">✓</span> Simple. Clear. Connected.</span>
+    </div>
+    <div class="hero-features">
+      <div><span class="feature-icon">▶</span><span><b>Video Rewards</b><small>Daily demo activities</small></span></div>
+      <div><span class="feature-icon">◎</span><span><b>Referral Network</b><small>Explore your team</small></span></div>
+      <div><span class="feature-icon">↗</span><span><b>Track Progress</b><small>One clear dashboard</small></span></div>
+    </div>
+  </div>
+  <div class="hero-art" aria-label="AdVora dashboard preview">
+    <div class="art-glow"></div>
+    <div class="preview-window">
+      <div class="preview-top"><div class="preview-dots"><i></i><i></i><i></i></div><span>ADVORA OVERVIEW</span><span class="preview-live">DEMO</span></div>
+      <div class="preview-welcome"><small>YOUR SPACE</small><strong>Welcome to AdVora</strong><span>Your rewards journey, organized.</span></div>
+      <div class="preview-balance"><div><small>DEMO BALANCE</small><strong>$0.00</strong></div><span class="balance-symbol">↗</span></div>
+      <div class="preview-bars"><div><span>Video rewards</span><b>Daily activity</b><i><em style="width:72%"></em></i></div><div><span>Referral network</span><b>Team growth</b><i><em style="width:54%"></em></i></div></div>
+      <div class="preview-foot"><span class="preview-avatar">A</span><span><b>Made for your journey</b><small>Rewards • Community • Progress</small></span><span class="preview-arrow">↗</span></div>
+    </div>
+    <div class="floating-chip chip-top"><span>✦</span> Your progress, at a glance</div>
+    <div class="floating-chip chip-bottom"><span class="chip-dot"></span> One connected experience</div>
+  </div>
+</section>
 
 <div class="notice">
   <b>Demo Mode:</b> This is a demo testing website. No real money is deposited or paid.
@@ -605,12 +697,16 @@ function logout(){
   clearSessionName();
   document.getElementById("dashboard").classList.add("hidden");
   document.getElementById("auth").classList.remove("hidden");
+  const homeHero=document.getElementById("homeHero");
+  if(homeHero) homeHero.classList.remove("hidden");
 }
 function showDashboard(){
   const user = currentUser();
   if(!user) return;
   document.getElementById("auth").classList.add("hidden");
   document.getElementById("dashboard").classList.remove("hidden");
+  const homeHero=document.getElementById("homeHero");
+  if(homeHero) homeHero.classList.add("hidden");
   const repairCard=document.getElementById("chainRepairCard");
   if(repairCard) repairCard.classList.toggle("hidden", user.name !== "ahmed3");
   render();
