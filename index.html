@@ -355,6 +355,121 @@ footer{max-width:1100px;margin:10px auto 0;padding:24px 20px 30px;color:#958b76;
 }
 @media(prefers-reduced-motion:reduce){#dashboard{animation:none}}
 
+
+/* Dashboard redesign v2 — cohesive navy/teal product UI; CSS only */
+#dashboard{
+  display:block;position:relative;padding-top:4px;
+}
+#dashboard:before{
+  content:"";position:absolute;z-index:0;top:0;left:0;right:0;height:290px;
+  background:radial-gradient(ellipse at 80% 5%,#3152a94a,transparent 42%),linear-gradient(120deg,#0b1733,#142d5a 68%,#1b3a70);
+  border-radius:24px;pointer-events:none
+}
+#dashboard>*{position:relative;z-index:1}
+#dashboard>.card:first-child{
+  min-height:142px;padding:30px 32px!important;margin-top:8px;
+  display:flex;align-items:center;
+  background:linear-gradient(115deg,#0c1937 0%,#172e5c 62%,#244487 100%)!important;
+  border:1px solid #ffffff20!important;border-bottom:3px solid #2ed2ba!important;
+  border-radius:22px!important;box-shadow:0 18px 42px #09152f40!important;
+  color:#fff;overflow:hidden
+}
+#dashboard>.card:first-child:after{
+  content:"";position:absolute;right:9%;top:-95px;width:245px;height:245px;border:1px solid #ffffff20;border-radius:50%;
+  box-shadow:0 0 0 25px #ffffff08,0 0 0 50px #ffffff05;pointer-events:none
+}
+#dashboard>.card:first-child>div{width:100%;position:relative;z-index:1}
+#dashboard>.card:first-child h2{
+  display:block!important;border:0!important;padding:0!important;margin:0 0 8px!important;
+  color:#fff!important;font-size:clamp(25px,3vw,34px)!important;letter-spacing:-.8px!important
+}
+#dashboard>.card:first-child h2:before{display:none!important}
+#dashboard>.card:first-child h2 span{color:#62e1cf!important}
+#dashboard>.card:first-child .muted{color:#c1d2f2!important;font-size:13px!important}
+#dashboard>.card:first-child button{
+  position:relative;z-index:2;width:auto;min-width:112px;padding:11px 18px!important;
+  background:linear-gradient(135deg,#e45b64,#bd3449)!important;border:1px solid #ff9ca5!important;
+  border-radius:10px;color:white!important;box-shadow:0 7px 18px #0003!important
+}
+#dashboard>.grid{
+  margin:20px 0 24px!important;gap:14px!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))
+}
+#dashboard>.grid .stat{
+  min-height:136px;display:flex;flex-direction:column;justify-content:center;gap:5px;
+  padding:22px 19px!important;border:1px solid #2c4268!important;border-radius:17px!important;
+  background:linear-gradient(150deg,#172744,#101a2e)!important;
+  box-shadow:0 12px 28px #0003,inset 0 1px #ffffff08!important
+}
+#dashboard>.grid .stat:after{width:100px;height:100px;right:-42px;top:-42px;background:#36d5bd12}
+#dashboard>.grid .stat small{color:#a9bbd9!important;font-size:10px!important;letter-spacing:1px!important}
+#dashboard>.grid .stat strong{font-size:clamp(24px,2.6vw,32px)!important;color:#66e1d0!important;letter-spacing:-.8px!important}
+#dashboard>.card:not(:first-child){
+  padding:25px 27px!important;margin-bottom:18px!important;
+  border:1px solid #263751!important;border-radius:18px!important;
+  background:linear-gradient(145deg,#151f31,#101722)!important;
+  box-shadow:0 12px 28px #0003!important
+}
+#dashboard>.card:not(:first-child) h2{
+  display:flex;align-items:center;gap:11px;margin:0 0 13px!important;padding:0 0 14px!important;
+  border-bottom:1px solid #2b3b53!important;color:#e9f0ff!important;
+  font-size:19px!important;letter-spacing:-.2px!important
+}
+#dashboard>.card:not(:first-child) h2:before{
+  display:inline-block!important;width:5px!important;height:24px!important;border-radius:5px!important;
+  background:linear-gradient(#35d8c0,#5376ec)!important
+}
+#dashboard>.card p{color:#bdc9dc}
+#dashboard>.card .muted{color:#9eacc3!important}
+#dashboard>.card .stat{
+  background:linear-gradient(145deg,#1a2a43,#121e30)!important;border-color:#304765!important
+}
+#dashboard>.card .stat small{color:#a9bddb!important}
+#dashboard>.card .stat strong{color:#66e1d0!important}
+#dashboard>.card input,#dashboard>.card select,#dashboard>.card textarea{
+  background:#0c1422!important;border-color:#34435a!important;color:#f3f7ff!important
+}
+#dashboard>.card input:focus,#dashboard>.card select:focus,#dashboard>.card textarea:focus{
+  border-color:#3fd7c2!important;box-shadow:0 0 0 3px #35d8c01f!important
+}
+#dashboard>.card .linkbox{
+  padding:16px 18px!important;background:#0c1627!important;border:1px dashed #3e7890!important;
+  border-radius:12px!important;color:#7de6d7!important
+}
+#dashboard>.card button{
+  box-shadow:0 6px 16px #0003!important;border-radius:10px!important
+}
+#dashboard>.card button.secondary{
+  background:linear-gradient(135deg,#1aa997,#087c83)!important;border-color:#38d5c0!important;color:#fff!important
+}
+#dashboard>.card button:not(.secondary):not(.danger){
+  background:linear-gradient(135deg,#3c70e8,#394fba)!important;border-color:#698af0!important;color:#fff!important
+}
+#dashboard>.card .tablewrap{border-color:#2d3e56!important;border-radius:13px!important}
+#dashboard>.card table{background:#101927!important;color:#e5edf9!important}
+#dashboard>.card th{background:#1c2b42!important;color:#9fe9df!important;border-bottom-color:#354760!important}
+#dashboard>.card td{border-bottom-color:#27374d!important;color:#d4deed}
+#dashboard>.card tbody tr:hover{background:#1a2a40!important}
+#dashboard .referral-tree{background:linear-gradient(145deg,#101a2a,#0c1421)!important;border-color:#30445f!important}
+#dashboard .tree-root{background:linear-gradient(135deg,#1d4e61,#172d50)!important;border-color:#43d6c1!important;color:#d5fff7!important}
+#dashboard .tree-team{background:#111d2d!important;border-color:#30445f!important}
+#dashboard .tree-team-title,#dashboard .tree-node-name{color:#6ce2d2!important}
+#dashboard .tree-node{background:#19263a!important;border-color:#344a67!important;color:#edf4ff!important}
+#dashboard .tree-node-meta{color:#a5b5cc!important}
+#dashboard .tree-children{border-left-color:#397b86!important}
+#dashboard .tree-empty{border-color:#3b506a!important;color:#aabbd1!important}
+#dashboard .notice{background:#302713!important;border-color:#80652c!important;color:#f1dca4!important}
+@media(max-width:760px){
+  #dashboard>.grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #dashboard>.card:first-child{padding:24px 21px!important;min-height:125px}
+  #dashboard>.card:not(:first-child){padding:20px 18px!important}
+}
+@media(max-width:420px){
+  #dashboard>.grid .stat{padding:16px 13px!important;min-height:112px}
+  #dashboard>.grid .stat small{font-size:9px!important;letter-spacing:.55px!important}
+  #dashboard>.grid .stat strong{font-size:23px!important}
+}
+
 </style>
 </head>
 
