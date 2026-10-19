@@ -645,7 +645,7 @@ footer{max-width:1100px;margin:10px auto 0;padding:24px 20px 30px;color:#958b76;
       </table>
     </div>
     <h3>Referral Tree</h3>
-    <p class="muted">Each direct referral of your account starts a separate team. Expandable-looking branches show the existing referral structure; no referral links or balances are changed.</p>
+    <p class="muted">Every referral level is shown using your existing referral records, including all members under each branch. No referral links, balances, or commission records are changed.</p>
     <div id="referralTree" class="referral-tree"><div class="tree-empty">Loading referral tree…</div></div>
     <h3>Referral Levels</h3>
     <div class="tablewrap">
@@ -1261,7 +1261,7 @@ function renderReferralTree(db,user){
   function nodeHTML(u,depth){
     if(visited.has(u.name)) return "";
     visited.add(u.name);
-    const kids=depth<5 ? childrenOf(u.name).filter(k=>!visited.has(k.name)) : [];
+    const kids=childrenOf(u.name).filter(k=>!visited.has(k.name));
     return '<div class="tree-node"><div class="tree-node-name">'+safe(u.name)+'</div>'+
       '<div class="tree-node-meta">Level '+depth+' · Package '+money(u.activePackage||0)+'</div>'+
       (kids.length?'<div class="tree-children">'+kids.map(k=>nodeHTML(k,depth+1)).join("")+'</div>':'')+
