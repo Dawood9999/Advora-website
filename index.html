@@ -508,13 +508,22 @@ async function importDemoData(){
   const file=input && input.files && input.files[0];
   if(!file) return msg("transferMsg","Choose the JSON backup file first.","error");
   try {
-    const parsed=JSON.parse(await file.text());
+    const fileData=JSON.parse(await file.text());
+    // Accept both the older raw database format and the newer wrapped export format.
+    const parsed=(fileData && fileData.db) ? fileData.db :
+                 (fileData && fileData.database) ? fileData.database :
+                 (fileData && fileData.data && fileData.data.users) ? fileData.data : fileData;
     if(!parsed || !parsed.users || typeof parsed.users!=="object" || !Object.keys(parsed.users).length)
       return msg("transferMsg","This file does not contain a valid AdVora demo backup.","error");
     const current=loadDB();
     const currentCount=Object.keys(current.users||{}).length;
     if(currentCount && !confirm("This browser already has "+currentCount+" demo account(s). Replace its demo data with the "+Object.keys(parsed.users).length+" account(s) in this backup? Export a backup first if you need to preserve both.")) return;
     if(!confirm("Import "+Object.keys(parsed.users).length+" demo account(s) and their demo balances/history into this browser? This is demo data only. Continue?")) return;
+    // Preserve any existing hosted-site database before importing the backup.
+    try {
+      const existingRaw=localStorage.getItem(DBKEY);
+      if(existingRaw) localStorage.setItem(DBKEY+"_before_import_backup",existingRaw);
+    } catch(e) {}
     localStorage.setItem(DBKEY,JSON.stringify(parsed));
     clearSessionName();
     document.getElementById("dashboard").classList.add("hidden");
