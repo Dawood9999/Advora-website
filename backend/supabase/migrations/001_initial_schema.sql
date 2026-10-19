@@ -31,14 +31,14 @@ create table public.profiles (
 
 create table public.packages (
   id text primary key,
-  price_pkr bigint not null check (price_pkr >= 0),
+  price_micro_usdt bigint not null check (price_micro_usdt >= 0),
   daily_video_limit integer not null check (daily_video_limit >= 0),
   active boolean not null default false
 );
 
 -- Initial package values are intentionally inactive until the business model,
 -- legal terms, currency and provider flow are approved.
-insert into public.packages (id, price_pkr, daily_video_limit, active) values
+insert into public.packages (id, price_micro_usdt, daily_video_limit, active) values
   ('starter', 0, 3, false),
   ('basic', 0, 6, false),
   ('plus', 0, 10, false),
@@ -50,6 +50,8 @@ create table public.payment_orders (
   user_id uuid not null references public.profiles(id),
   package_id text references public.packages(id),
   provider text not null,
+  network text not null default 'BEP20' check (network = 'BEP20'),
+  chain_id integer not null default 56 check (chain_id = 56),
   provider_reference text,
   amount_pkr bigint not null check (amount_pkr > 0),
   state public.payment_state not null default 'created',
@@ -76,21 +78,21 @@ create table public.daily_video_claims (
   activation_id uuid not null references public.package_activations(id),
   claim_date date not null,
   claim_number integer not null check (claim_number >= 1),
-  reward_pkr bigint not null check (reward_pkr >= 0),
+  reward_micro_usdt bigint not null check (reward_micro_usdt >= 0),
   created_at timestamptz not null default now(),
   unique (user_id, claim_date, claim_number)
 );
 create index daily_video_claims_user_date_idx
   on public.daily_video_claims(user_id, claim_date);
 
--- Immutable accounting ledger: amounts are integer minor units (paisa), never floats.
+-- Immutable accounting ledger: amounts are integer micro-USDT units (1 USDT = 1,000,000 units), never floats.
 -- Positive amounts credit a user; negative amounts debit/hold funds.
 create table public.ledger_entries (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.profiles(id),
   kind public.ledger_kind not null,
-  amount_paisa bigint not null check (amount_paisa <> 0),
-  currency char(3) not null default 'PKR' check (currency = 'PKR'),
+  amount_micro_usdt bigint not null check (amount_micro_usdt <> 0),
+  currency char(4) not null default 'USDT' check (currency = 'USDT'),
   source_type text not null,
   source_id uuid not null,
   idempotency_key text not null unique,
@@ -104,9 +106,10 @@ create index ledger_entries_user_created_idx
 create table public.withdrawal_requests (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.profiles(id),
-  amount_paisa bigint not null check (amount_paisa > 0),
-  currency char(3) not null default 'PKR' check (currency = 'PKR'),
+  amount_micro_usdt bigint not null check (amount_micro_usdt > 0),
+  currency char(4) not null default 'USDT' check (currency = 'USDT'),
   state public.withdrawal_state not null default 'requested',
+  network text not null default 'BEP20' check (network = 'BEP20'),
   destination_last4 text,
   provider_reference text,
   idempotency_key text not null unique,
