@@ -491,6 +491,10 @@ async function importDemoData(){
   } catch(e) { msg("transferMsg","Import failed. Please select a valid AdVora JSON backup.","error"); }
 }
 
+function findUserKey(db,name){
+  const wanted=String(name||"").trim().toLowerCase();
+  return Object.keys((db && db.users) || {}).find(key=>key.toLowerCase()===wanted) || "";
+}
 function register(){
   const name = document.getElementById("regName").value.trim();
   const pass = document.getElementById("regPass").value;
@@ -507,14 +511,18 @@ function register(){
   if(pass.length < 4){
     return msg("regMsg","Demo password must be at least 4 characters long.","error");
   }
-  if(db.users[name]){
-    return msg("regMsg","This username already exists.","error");
+  if(findUserKey(db,name)){
+    return msg("regMsg","This username already exists. Usernames are not case-sensitive.","error");
   }
-  if(ref === name){
+  if(ref){
+    const refKey=findUserKey(db,ref);
+    if(!refKey){
+      return msg("regMsg","This referrer is not present in this browser’s demo data. Create the referrer account first.","error");
+    }
+    ref=refKey;
+  }
+  if(ref.toLowerCase() === name.toLowerCase()){
     return msg("regMsg","You cannot use your own username as the referrer.","error");
-  }
-  if(ref && !db.users[ref]){
-    return msg("regMsg","This referrer is not present in this browser’s demo data. Create the referrer account first.","error");
   }
 
   db.users[name] = makeUser(name,pass,ref);
