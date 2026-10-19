@@ -209,19 +209,28 @@ footer{max-width:1100px;margin:10px auto 0;padding:24px 20px 30px;color:#958b76;
 
 
 /* Referral Tree — visual only; reads existing referrer links */
-.referral-tree{margin-top:14px;padding:18px;border:1px solid #514126;border-radius:14px;background:linear-gradient(145deg,#17150f,#101010);overflow-x:auto}
-.tree-root-wrap{display:flex;justify-content:center;margin-bottom:22px;position:relative}
-.tree-root{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border:1px solid #d7b96a;border-radius:12px;background:linear-gradient(135deg,#302515,#15120b);color:#f0d88b;font-weight:800;box-shadow:0 5px 18px #0005}
-.tree-root-wrap:after{content:"";position:absolute;top:100%;height:22px;border-left:2px solid #9b7c3c}
-.tree-teams{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;align-items:start}
-.tree-team{min-width:0;border:1px solid #493b23;border-radius:13px;background:#151515;padding:12px}
-.tree-team-title{color:#e3c36f;font-weight:800;text-align:center;padding:4px 6px 12px;border-bottom:1px solid #3a3020;margin-bottom:12px}
-.tree-node{position:relative;margin:8px 0 0;padding:10px;border:1px solid #514126;border-radius:10px;background:#211d14;color:#f0e8d7;overflow-wrap:anywhere}
-.tree-node-name{font-weight:750;color:#e4c477}
-.tree-node-meta{font-size:11px;color:#b8b0a0;margin-top:3px}
-.tree-children{margin:10px 0 0 12px;padding-left:12px;border-left:2px solid #66512d}
-.tree-empty{padding:12px;border:1px dashed #514126;border-radius:10px;color:#b8b0a0;text-align:center;font-size:13px}
-@media(max-width:520px){.referral-tree{padding:10px}.tree-teams{grid-template-columns:1fr}.tree-node{padding:9px}}
+/* Referral genealogy tree: connected horizontal branches */
+.referral-tree{margin-top:14px;padding:24px 16px;border:1px solid #dbe4f0;border-radius:16px;background:linear-gradient(145deg,#f8fbff,#edf4fb);overflow:auto;text-align:center}
+.tree-root-wrap{display:flex;justify-content:center;margin-bottom:0;position:relative;padding-bottom:28px}
+.tree-root{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border:1px solid #9eb8ff;border-radius:14px;background:linear-gradient(135deg,#173b7a,#315bd5);color:#fff;font-weight:800;box-shadow:0 8px 22px #244a8c25;white-space:nowrap}
+.tree-root-wrap:after{content:"";position:absolute;top:100%;height:28px;border-left:2px solid #9aaec9}
+.tree-teams{display:flex;justify-content:center;align-items:flex-start;gap:0;min-width:max-content;margin:0 auto}
+.tree-team{position:relative;display:flex;flex-direction:column;align-items:center;min-width:145px;padding:0 12px;border:0;border-radius:0;background:transparent}
+.tree-team-title{color:#315bd5;font-size:11px;font-weight:800;text-align:center;letter-spacing:.7px;padding:0 8px 8px;margin:0}
+.tree-node{position:relative;display:flex;flex-direction:column;align-items:center;margin:0;padding:0;border:0;background:transparent;color:#172033;overflow:visible}
+.tree-node-card{position:relative;z-index:1;min-width:112px;max-width:165px;padding:11px 14px;border:1px solid #d8e2f0;border-radius:12px;background:#fff;box-shadow:0 5px 15px #1c355b12;overflow-wrap:anywhere}
+.tree-node-name{font-weight:800;color:#183a72;font-size:13px}
+.tree-node-meta{font-size:11px;color:#63738b;margin-top:5px;white-space:nowrap}
+.tree-children{display:flex;align-items:flex-start;justify-content:center;position:relative;padding-top:28px;margin-top:0;gap:0}
+.tree-children:before{content:"";position:absolute;top:0;left:50%;height:28px;border-left:2px solid #9aaec9}
+.tree-children>.tree-node{padding:0 10px}
+.tree-children>.tree-node:before{content:"";position:absolute;top:0;left:0;right:0;border-top:2px solid #9aaec9}
+.tree-children>.tree-node:first-child:before{left:50%}
+.tree-children>.tree-node:last-child:before{right:50%}
+.tree-children>.tree-node:only-child:before{display:none}
+.tree-children>.tree-node>.tree-node-card:before{content:"";position:absolute;bottom:100%;left:50%;height:28px;border-left:2px solid #9aaec9}
+.tree-empty{padding:16px;border:1px dashed #bac9dc;border-radius:10px;color:#63738b;text-align:center;font-size:13px}
+@media(max-width:520px){.referral-tree{padding:18px 10px}.tree-node-card{min-width:100px;padding:9px 10px}.tree-children>.tree-node{padding:0 7px}.tree-node-meta{font-size:10px}}
 
 
 /* AdVora homepage refresh — presentation only */
@@ -1259,21 +1268,19 @@ function renderReferralTree(db,user){
     .sort((a,b)=>String(a.created||"").localeCompare(String(b.created||"")) || String(a.name).localeCompare(String(b.name)));
   const visited=new Set([user.name]);
   function nodeHTML(u,depth){
-    if(visited.has(u.name)) return "";
+    if(!u || visited.has(u.name)) return "";
     visited.add(u.name);
     const kids=childrenOf(u.name).filter(k=>!visited.has(k.name));
-    return '<div class="tree-node"><div class="tree-node-name">'+safe(u.name)+'</div>'+
-      '<div class="tree-node-meta">Level '+depth+' · Package '+money(u.activePackage||0)+'</div>'+
+    return '<div class="tree-node"><div class="tree-node-card"><div class="tree-node-name">'+safe(u.name)+'</div>'+
+      '<div class="tree-node-meta">Level '+depth+' · Package '+money(u.activePackage||0)+'</div></div>'+
       (kids.length?'<div class="tree-children">'+kids.map(k=>nodeHTML(k,depth+1)).join("")+'</div>':'')+
       '</div>';
   }
   const direct=childrenOf(user.name);
-  const teamLetter=(index)=>{let n=index+1,label="";while(n>0){n--;label=String.fromCharCode(65+n%26)+label;n=Math.floor(n/26);}return label;};
-  target.innerHTML='<div class="tree-root-wrap"><div class="tree-root">♛ '+safe(user.name)+' <span style="font-size:11px;font-weight:500;color:#d0c4a4">MAIN ACCOUNT</span></div></div>'+
-    (direct.length?'<div class="tree-teams">'+direct.map((child,index)=>{
-      visited.clear();visited.add(user.name);
-      return '<section class="tree-team"><div class="tree-team-title">Team '+teamLetter(index)+'</div>'+nodeHTML(child,1)+'</section>';
-    }).join("")+'</div>':'<div class="tree-empty">No direct referrals yet. Each new direct referral will create a separate team.</div>');
+  target.innerHTML='<div class="tree-root-wrap"><div class="tree-root">♛ '+safe(user.name)+' <span style="font-size:11px;font-weight:500;color:#d0e2ff">MAIN ACCOUNT</span></div></div>'+
+    (direct.length?'<div class="tree-teams">'+direct.map((child,index)=>
+      '<section class="tree-team"><div class="tree-team-title">DIRECT REFERRAL '+(index+1)+'</div>'+nodeHTML(child,1)+'</section>'
+    ).join("")+'</div>':'<div class="tree-empty">No direct referrals yet. New referrals will appear here.</div>');
 }
 function render(){
   const db=loadDB();
