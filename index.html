@@ -1285,16 +1285,21 @@ function levelCounts(db,user){
   return counts;
 }
 function downlineAtEachLevel(db,user){
-  // One eligible recipient at each generation; empty levels are not redistributed.
-  let parents=[user.name];
+  // Follow one consistent branch: each selected level must be directly below the previously selected member.
+  // Empty levels are not redistributed. Deterministic ordering keeps previews repeatable.
+  const allUsers=Object.values(db.users||{});
   const selected=[];
   const visited=new Set([user.name]);
+  let parentName=user.name;
   for(let level=1;level<=5;level++){
-    const children=Object.values(db.users).filter(u=>parents.includes(u.referrer) && !visited.has(u.name));
+    const children=allUsers
+      .filter(u=>String(u.referrer||"")===parentName && !visited.has(u.name))
+      .sort((a,b)=>String(a.created||"").localeCompare(String(b.created||"")) || String(a.name).localeCompare(String(b.name)));
     if(!children.length) break;
-    selected.push({user:children[0],level});
-    children.forEach(u=>visited.add(u.name));
-    parents=children.map(u=>u.name);
+    const child=children[0];
+    selected.push({user:child,level});
+    visited.add(child.name);
+    parentName=child.name;
   }
   return selected;
 }
