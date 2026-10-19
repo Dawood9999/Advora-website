@@ -53,7 +53,7 @@ create table public.payment_orders (
   network text not null default 'BEP20' check (network = 'BEP20'),
   chain_id integer not null default 56 check (chain_id = 56),
   provider_reference text,
-  amount_pkr bigint not null check (amount_pkr > 0),
+  amount_micro_usdt bigint not null check (amount_micro_usdt > 0),
   state public.payment_state not null default 'created',
   idempotency_key text not null unique,
   created_at timestamptz not null default now(),
