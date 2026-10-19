@@ -282,6 +282,38 @@ footer{max-width:1100px;margin:10px auto 0;padding:24px 20px 30px;color:#958b76;
 @media(max-width:850px){.home-hero{grid-template-columns:1fr;gap:16px;padding:36px 30px}.hero-art{min-height:330px}.hero-copy h2{font-size:42px!important}.chip-top{right:0}.chip-bottom{left:0}}
 @media(max-width:520px){.header-inner{padding:19px 16px}.site-header .brand-lockup h1{font-size:27px}.brand-mark{width:42px;height:42px}.header-pill{padding:8px 10px;font-size:8px;letter-spacing:.8px}.home-hero{padding:30px 21px;border-radius:20px;min-height:0}.eyebrow{font-size:8px;letter-spacing:1px}.hero-copy h2{font-size:36px!important;letter-spacing:-1.2px;margin-top:18px!important}.hero-description{font-size:13px}.hero-features{gap:14px}.hero-art{min-height:300px}.preview-window{padding:13px}.chip-top{top:0;right:-3px}.chip-bottom{bottom:-3px;left:-3px}.floating-chip{font-size:8px;padding:8px 9px}.notice{font-size:12px}}
 
+
+/* AdVora homepage details — visual-only feature section */
+.home-highlights{margin:30px 0 34px}
+.highlights-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin:0 2px 18px}
+.section-kicker{display:block;color:#168f88;font-size:10px;font-weight:850;letter-spacing:1.7px;margin-bottom:8px}
+.highlights-heading h2{display:block!important;margin:0!important;padding:0!important;border:0!important;color:#172d59!important;font-size:clamp(23px,3vw,31px)!important;letter-spacing:-.8px}
+.highlights-heading h2:before{display:none!important}
+.highlights-heading h2 span{color:#168f99}
+.highlights-heading>p{max-width:330px;margin:0 0 3px;color:#65738d;font-size:12px;line-height:1.8}
+.highlight-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.highlight-card{position:relative;min-width:0;overflow:hidden;padding:23px 22px 20px;border:1px solid #e3eaf5;border-radius:17px;background:linear-gradient(155deg,#fff 0%,#f8faff 100%);box-shadow:0 9px 24px #1b37630b;transition:transform .18s,box-shadow .18s,border-color .18s}
+.highlight-card:hover{transform:translateY(-3px);border-color:#c9d8f5;box-shadow:0 15px 30px #1b376315}
+.highlight-icon{display:grid;place-items:center;width:43px;height:43px;border-radius:13px;font-size:20px;font-weight:850}
+.icon-video{color:#1d66d4;background:linear-gradient(135deg,#e3efff,#eef3ff)}
+.icon-team{color:#078c83;background:linear-gradient(135deg,#dffaf4,#e9f8ff)}
+.icon-track{color:#5c5bd4;background:linear-gradient(135deg,#eceaff,#f3f0ff)}
+.highlight-number{display:block;margin-top:20px;color:#8b9ab4;font-size:9px;font-weight:850;letter-spacing:1.3px}
+.highlight-card h3{margin:8px 0 9px;color:#1a2e55;font-size:16px;letter-spacing:-.3px}
+.highlight-card p{min-height:60px;margin:0;color:#65738d;font-size:12px;line-height:1.8}
+.highlight-line{height:3px;margin-top:18px;border-radius:3px;background:#e8edf7;overflow:hidden}
+.highlight-line span{display:block;width:34%;height:100%;border-radius:3px;background:linear-gradient(90deg,#29c9b1,#5274e9)}
+.highlight-card:nth-child(2) .highlight-line span{width:58%}
+.highlight-card:nth-child(3) .highlight-line span{width:82%}
+.home-trust-strip{display:flex;align-items:center;gap:12px;margin-top:15px;padding:15px 18px;border:1px solid #dcebe9;border-radius:13px;background:linear-gradient(100deg,#f0fbf8,#f7faff)}
+.trust-mark{display:grid;place-items:center;flex:none;width:30px;height:30px;border-radius:50%;background:#d5f7ef;color:#078b7b;font-weight:900}
+.home-trust-strip strong,.home-trust-strip small{display:block}
+.home-trust-strip strong{color:#1d3d58;font-size:12px}
+.home-trust-strip small{margin-top:3px;color:#637890;font-size:10px;line-height:1.6}
+.trust-label{margin-left:auto;flex:none;padding:7px 9px;border:1px solid #cfe6e4;border-radius:7px;color:#188d84;font-size:8px;font-weight:850;letter-spacing:1px}
+@media(max-width:850px){.highlight-grid{grid-template-columns:1fr 1fr}.highlight-card:last-child{grid-column:span 2}.highlights-heading{align-items:start;flex-direction:column;gap:9px}}
+@media(max-width:520px){.home-highlights{margin:24px 0}.highlights-heading h2{font-size:24px!important}.highlight-grid{grid-template-columns:1fr;gap:11px}.highlight-card:last-child{grid-column:auto}.highlight-card{padding:19px}.highlight-card p{min-height:0}.highlight-number{margin-top:15px}.home-trust-strip{align-items:flex-start;padding:13px}.trust-label{display:none}}
+
 </style>
 </head>
 
@@ -324,6 +356,31 @@ footer{max-width:1100px;margin:10px auto 0;padding:24px 20px 30px;color:#958b76;
     <div class="floating-chip chip-top"><span>✦</span> Your progress, at a glance</div>
     <div class="floating-chip chip-bottom"><span class="chip-dot"></span> One connected experience</div>
   </div>
+</section>
+
+<section id="homeHighlights" class="home-highlights">
+  <div class="highlights-heading">
+    <div><span class="section-kicker">A CLEARER WAY TO EXPLORE</span><h2>Everything you need, <span>in one place.</span></h2></div>
+    <p>Designed to make your demo experience simple, organized, and easy to follow.</p>
+  </div>
+  <div class="highlight-grid">
+    <article class="highlight-card">
+      <div class="highlight-icon icon-video">▶</div><span class="highlight-number">01 / WATCH</span>
+      <h3>Daily Video Activities</h3><p>Explore available demo video activities and keep track of your daily progress.</p>
+      <div class="highlight-line"><span></span></div>
+    </article>
+    <article class="highlight-card">
+      <div class="highlight-icon icon-team">◎</div><span class="highlight-number">02 / CONNECT</span>
+      <h3>Your Referral Community</h3><p>View your referral team and follow your community activity in one organized space.</p>
+      <div class="highlight-line"><span></span></div>
+    </article>
+    <article class="highlight-card">
+      <div class="highlight-icon icon-track">↗</div><span class="highlight-number">03 / TRACK</span>
+      <h3>Progress at a Glance</h3><p>Review demo balances, package details, and activity history from your dashboard.</p>
+      <div class="highlight-line"><span></span></div>
+    </article>
+  </div>
+  <div class="home-trust-strip"><span class="trust-mark">✓</span><div><strong>Clear by design. Easy to navigate.</strong><small>AdVora is currently a demo experience. No real deposits or payouts are processed.</small></div><span class="trust-label">DEMO PLATFORM</span></div>
 </section>
 
 <div class="notice">
@@ -699,6 +756,8 @@ function logout(){
   document.getElementById("auth").classList.remove("hidden");
   const homeHero=document.getElementById("homeHero");
   if(homeHero) homeHero.classList.remove("hidden");
+  const homeHighlights=document.getElementById("homeHighlights");
+  if(homeHighlights) homeHighlights.classList.remove("hidden");
 }
 function showDashboard(){
   const user = currentUser();
@@ -707,6 +766,8 @@ function showDashboard(){
   document.getElementById("dashboard").classList.remove("hidden");
   const homeHero=document.getElementById("homeHero");
   if(homeHero) homeHero.classList.add("hidden");
+  const homeHighlights=document.getElementById("homeHighlights");
+  if(homeHighlights) homeHighlights.classList.add("hidden");
   const repairCard=document.getElementById("chainRepairCard");
   if(repairCard) repairCard.classList.toggle("hidden", user.name !== "ahmed3");
   render();
