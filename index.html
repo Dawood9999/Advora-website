@@ -314,6 +314,47 @@ footer{max-width:1100px;margin:10px auto 0;padding:24px 20px 30px;color:#958b76;
 @media(max-width:850px){.highlight-grid{grid-template-columns:1fr 1fr}.highlight-card:last-child{grid-column:span 2}.highlights-heading{align-items:start;flex-direction:column;gap:9px}}
 @media(max-width:520px){.home-highlights{margin:24px 0}.highlights-heading h2{font-size:24px!important}.highlight-grid{grid-template-columns:1fr;gap:11px}.highlight-card:last-child{grid-column:auto}.highlight-card{padding:19px}.highlight-card p{min-height:0}.highlight-number{margin-top:15px}.home-trust-strip{align-items:flex-start;padding:13px}.trust-label{display:none}}
 
+
+/* Login and dashboard polish — CSS only; account logic and stored data unchanged */
+#auth{gap:22px;align-items:stretch;margin-top:22px}
+#auth>.card{padding:28px 26px;border-radius:20px;border-color:#4a3b20;background:linear-gradient(155deg,#1b1a16 0%,#121212 78%);box-shadow:0 18px 42px #0006}
+#auth>.card:first-child{background:radial-gradient(ellipse at 100% 0%,#3a2c12 0,transparent 42%),linear-gradient(155deg,#1b1a16,#111)}
+#auth>.card h2{font-size:21px;letter-spacing:.15px;color:#f0d68a;padding-bottom:15px;margin-bottom:19px;border-bottom:1px solid #514126}
+#auth>.card h2:before{width:5px;height:25px;border-radius:6px}
+#auth>.card input{min-height:48px;margin:8px 0;background:#0b0b0b;border-color:#4c412d}
+#auth>.card input:focus{border-color:#d6b65f;box-shadow:0 0 0 4px #d6b65f1c}
+#auth>.card>button:first-of-type{min-height:48px;margin-top:12px;font-size:14px}
+#auth>.card p[id$="Msg"]{min-height:8px;overflow-wrap:anywhere}
+#auth>.card hr{border-top-color:#403722!important}
+#auth>.card h3{font-size:14px;letter-spacing:.2px;margin:18px 0 8px;color:#e6c879!important}
+#auth>.card .muted{font-size:12px}
+#auth>.card input[type="file"]{padding:9px;font-size:12px}
+#dashboard{animation:advoraEnter .35s ease-out both}
+#dashboard>.card:first-child{padding:26px 28px;border-radius:19px;background:radial-gradient(ellipse at 100% 0%,#3a2b12 0,transparent 45%),linear-gradient(120deg,#1b1a16,#111);box-shadow:0 18px 38px #0005}
+#dashboard>.card:first-child h2{font-size:clamp(21px,3vw,28px);letter-spacing:-.45px;color:#f0d68a;margin-bottom:6px!important}
+#dashboard>.card:first-child h2 span{color:#fff2c6}
+#dashboard>.card:first-child .muted{font-size:13px}
+#dashboard>.card:first-child button{width:auto;min-width:105px;padding:10px 17px}
+#dashboard>.grid{margin:20px 0 23px;gap:15px}
+#dashboard>.grid .stat{min-height:112px;display:flex;flex-direction:column;justify-content:center;border-radius:16px;box-shadow:inset 0 1px #ffffff06,0 9px 22px #0003}
+#dashboard>.grid .stat strong{font-variant-numeric:tabular-nums}
+#dashboard>.card{scroll-margin-top:18px}
+#dashboard>.card h2{font-size:19px}
+#dashboard .stat p{margin:8px 0;font-size:12px}
+#dashboard .linkbox{line-height:1.8}
+#dashboard #videoBtn{min-height:49px}
+#dashboard .referral-tree{box-shadow:inset 0 1px #ffffff05}
+@keyframes advoraEnter{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:680px){
+  #auth{gap:15px;margin-top:16px}
+  #auth>.card{padding:21px 18px}
+  #auth>.card h2{font-size:19px}
+  #dashboard>.card:first-child{padding:21px 18px}
+  #dashboard>.grid{gap:10px;margin:15px 0 18px}
+  #dashboard>.grid .stat{min-height:100px}
+}
+@media(prefers-reduced-motion:reduce){#dashboard{animation:none}}
+
 </style>
 </head>
 
