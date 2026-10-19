@@ -295,18 +295,18 @@ footer{max-width:1100px;margin:10px auto 0;padding:24px 20px 30px;color:#958b76;
     <h2>Packages</h2>
     <p class="muted">Activating a demo package does not require payment and does not generate real money.</p>
     <div class="grid">
-      <div class="stat"><small>Starter</small><strong>$10</strong><button onclick="buyPackage(10)">Activate Demo</button></div>
-      <div class="stat"><small>Basic</small><strong>$30</strong><button onclick="buyPackage(30)">Activate Demo</button></div>
-      <div class="stat"><small>Standard</small><strong>$50</strong><button onclick="buyPackage(50)">Activate Demo</button></div>
-      <div class="stat"><small>Premium</small><strong>$100</strong><button onclick="buyPackage(100)">Activate Demo</button></div>
+      <div class="stat"><small>Starter</small><strong>$10</strong><p class="muted">3 demo videos per day</p><button onclick="buyPackage(10)">Activate Demo</button></div>
+      <div class="stat"><small>Basic</small><strong>$30</strong><p class="muted">6 demo videos per day</p><button onclick="buyPackage(30)">Activate Demo</button></div>
+      <div class="stat"><small>Standard</small><strong>$50</strong><p class="muted">10 demo videos per day</p><button onclick="buyPackage(50)">Activate Demo</button></div>
+      <div class="stat"><small>Premium</small><strong>$100</strong><p class="muted">15 demo videos per day</p><button onclick="buyPackage(100)">Activate Demo</button></div>
     </div>
     <p id="packageMsg"></p>
   </div>
 
   <div class="card">
     <h2>Daily Video Rewards</h2>
-    <p>Demo reward: <b>$0.17 per video</b>, maximum 3 per day.</p>
-    <p>Videos completed today: <b id="videoCount">0/3</b></p>
+    <p>Demo reward: <b>$0.17 per video</b>. Daily limits depend on the activated demo package.</p>
+    <p>Videos completed today: <b id="videoCount">0/0</b></p>
     <button id="videoBtn" onclick="claimVideo()">Claim Demo Video Reward — $0.17</button>
     <p id="videoMsg"></p>
     <p class="muted">This button records a demo reward only; it does not verify that a real video was watched or that real income was earned.</p>
@@ -347,7 +347,7 @@ footer{max-width:1100px;margin:10px auto 0;padding:24px 20px 30px;color:#958b76;
         <tbody id="levelTeam"></tbody>
       </table>
     </div>
-    <p class="muted">Demo referral rates: Level 1 = 10%, Level 2 = 5%, Level 3 = 3%, Level 4 = 1%, Level 5 = 1%. For each video claim, every existing upline receives the applicable percentage bonus plus a separate $0.01 activity bonus. This is a local demo only.</p>
+    <p class="muted">Demo referral rates: Level 1 = 5%, Level 2 = 3%, Level 3 = 2%, Level 4 = 1%, Level 5 = 1%. For each video claim, every existing upline receives the applicable percentage bonus plus a separate $0.01 activity bonus. This is a local demo only.</p>
   </div>
 
   <div class="card">
@@ -403,7 +403,7 @@ const SESSIONKEY = "advora_full_demo_session";
 function getSessionName(){ return sessionStorage.getItem(SESSIONKEY) || ""; }
 function setSessionName(name){ sessionStorage.setItem(SESSIONKEY, name); }
 function clearSessionName(){ sessionStorage.removeItem(SESSIONKEY); }
-const rates = [0.10, 0.05, 0.03, 0.01, 0.01];
+const rates = [0.05, 0.03, 0.02, 0.01, 0.01];
 
 function loadDB(){
   try {
@@ -606,6 +606,14 @@ function dayKey(){
   const d = new Date();
   return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
 }
+function dailyVideoLimit(user){
+  const packageValue=Number(user && user.activePackage || 0);
+  if(packageValue>=100) return 15;
+  if(packageValue>=50) return 10;
+  if(packageValue>=30) return 6;
+  if(packageValue>=10) return 3;
+  return 0;
+}
 function countVideos(user){
   return Number(user.videos[dayKey()] || 0);
 }
@@ -626,8 +634,12 @@ function ancestors(db,user){
 function claimVideo(){
   const user = currentUser();
   if(!user) return;
-  if(countVideos(user) >= 3){
-    return msg("videoMsg","You have completed all 3 videos for today.","error");
+  const dailyLimit=dailyVideoLimit(user);
+  if(dailyLimit===0){
+    return msg("videoMsg","Activate a demo package first to unlock demo videos. No payment is taken.","error");
+  }
+  if(countVideos(user) >= dailyLimit){
+    return msg("videoMsg","You have completed all "+dailyLimit+" demo videos for today.","error");
   }
   const db=loadDB();
   const me=db.users[user.name];
@@ -911,8 +923,9 @@ function render(){
   document.getElementById("activePackage").textContent=money(user.activePackage);
   document.getElementById("directCount").textContent=(user.referrals||[]).length;
   document.getElementById("myLink").textContent=referralURL(user.name);
-  document.getElementById("videoCount").textContent=countVideos(user)+"/3";
-  document.getElementById("videoBtn").disabled=countVideos(user)>=3;
+  const videoLimit=dailyVideoLimit(user);
+  document.getElementById("videoCount").textContent=countVideos(user)+"/"+videoLimit;
+  document.getElementById("videoBtn").disabled=videoLimit===0 || countVideos(user)>=videoLimit;
 
   const direct=document.getElementById("directTeam");
   const children=(user.referrals||[]).map(n=>db.users[n]).filter(Boolean);
