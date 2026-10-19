@@ -31,7 +31,7 @@ create table public.profiles (
 
 create table public.packages (
   id text primary key,
-  price_pkr bigint not null check (price_pkr > 0),
+  price_pkr bigint not null check (price_pkr >= 0),
   daily_video_limit integer not null check (daily_video_limit >= 0),
   active boolean not null default false
 );
@@ -75,9 +75,10 @@ create table public.daily_video_claims (
   user_id uuid not null references public.profiles(id),
   activation_id uuid not null references public.package_activations(id),
   claim_date date not null,
+  claim_number integer not null check (claim_number >= 1),
   reward_pkr bigint not null check (reward_pkr >= 0),
   created_at timestamptz not null default now(),
-  unique (user_id, claim_date, id)
+  unique (user_id, claim_date, claim_number)
 );
 create index daily_video_claims_user_date_idx
   on public.daily_video_claims(user_id, claim_date);
