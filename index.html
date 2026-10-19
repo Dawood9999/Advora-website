@@ -261,6 +261,8 @@ footer{max-width:1100px;margin:10px auto 0;padding:24px 20px 30px;color:#958b76;
     <button class="secondary" type="button" onclick="exportDemoData()">Export Demo Data Backup</button>
     <input id="importDemoFile" type="file" accept=".json,application/json">
     <button type="button" onclick="importDemoData()">Import Demo Data Backup</button>
+    <button type="button" class="secondary" onclick="restoreLocalBackup()">Restore Previous Local Backup</button>
+    <p class="muted">The restore option uses the last valid local snapshot saved before a database change. It is available only in this browser.</p>
     <p id="transferMsg" class="muted"></p>
   </div>
 </section>
@@ -412,8 +414,39 @@ function loadDB(){
     return {users:{}};
   }
 }
+const BACKUPKEY = "advora_full_demo_v1_backup";
 function saveDB(db){
+  // Preserve the last valid non-empty local database before replacing it.
+  try {
+    const previousRaw=localStorage.getItem(DBKEY);
+    if(previousRaw){
+      const previous=JSON.parse(previousRaw);
+      if(previous && previous.users && Object.keys(previous.users).length){
+        localStorage.setItem(BACKUPKEY,previousRaw);
+      }
+    }
+  } catch(e) {
+    // Never block a valid save just because an older snapshot cannot be parsed.
+  }
   localStorage.setItem(DBKEY, JSON.stringify(db));
+}
+function restoreLocalBackup(){
+  const status=document.getElementById("transferMsg");
+  const backupRaw=localStorage.getItem(BACKUPKEY);
+  if(!backupRaw) return msg("transferMsg","No automatic local backup is available on this browser yet.","error");
+  try{
+    const backup=JSON.parse(backupRaw);
+    if(!backup || !backup.users || !Object.keys(backup.users).length)
+      return msg("transferMsg","The automatic local backup is not valid. Current data was not changed.","error");
+    if(!confirm("Restore the previous local AdVora demo database with "+Object.keys(backup.users).length+" account(s)? Current demo data will be replaced by that previous snapshot. Export a backup first if you need to preserve the current version.")) return;
+    localStorage.setItem(DBKEY,backupRaw);
+    clearSessionName();
+    document.getElementById("dashboard").classList.add("hidden");
+    document.getElementById("auth").classList.remove("hidden");
+    msg("transferMsg","Previous local backup restored. Log in with an account from that snapshot.","success");
+  }catch(e){
+    msg("transferMsg","Could not restore the automatic backup. Current data was not changed.","error");
+  }
 }
 function money(n){
   return "$" + (Number(n)||0).toFixed(2);
