@@ -29,6 +29,19 @@ See `backend/supabase/migrations/001_initial_schema.sql`. It is a foundation for
 
 Supabase advertises a Free plan for experimentation, with limits and pausing after a period of inactivity. It does not include automatic backups on the Free plan. Confirm current quotas and costs before launch; a free development environment is not a substitute for production backups and operational support.
 
+## Selected crypto network: USDT on BNB Smart Chain (BEP20)
+
+The requested deposit/withdrawal network is BEP20 on BNB Smart Chain. The draft SQL now uses USDT accounting units (1 USDT = 1,000,000 micro-USDT units), marks payment orders as BEP20 / chain ID 56, and records BEP20 on withdrawal requests. This is only a schema draft; it does not connect to a wallet, monitor the chain, or send transactions.
+
+Before any live funds are accepted:
+- Confirm the exact official USDT token contract for BNB Smart Chain from Tether's official documentation and configure it server-side; never trust a token name/symbol alone.
+- Decide the custody model and use a reputable provider or professionally reviewed wallet infrastructure. Never store seed phrases/private keys in GitHub, frontend code, or chat.
+- Generate a unique deposit address per user/order where possible, or use a provider with reliable deposit attribution; define how confirmations, reorgs, wrong-network transfers, underpayments, overpayments, and duplicate events are handled.
+- A trusted server-side watcher/provider webhook must verify chain ID 56, token contract, destination, amount, transaction receipt/status, and required confirmations before crediting a deposit. Make processing idempotent and reconcile against chain/provider records.
+- Withdrawals must be server-side, manually reviewed at first, check available balance and risk controls in a database transaction, apply rate limits and address checks, and use idempotency plus an auditable payment reference. Do not claim a withdrawal is paid until the chain transaction is independently verified.
+- Define fees, minimum/maximum limits, processing times, refund/error handling, customer support, sanctions/AML obligations where applicable, and secure operational key management before launch.
+- Use a testnet or provider sandbox for integration tests first. Testnet tokens have no real value. Do not enable live transfers until security review and provider/business approvals are complete.
+
 ## Payment provider research (Pakistan)
 
 Safepay publishes a sandbox environment for integration testing and says a production account requires onboarding and KYC. Live payment acceptance is not automatic just because an account is created. Confirm with the provider that AdVora's specific business model, payment purpose, refunds, and any intended payouts are permitted before implementing live flows. Never commit API secrets to this repository.
