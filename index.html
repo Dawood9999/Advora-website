@@ -771,8 +771,57 @@ footer{color:#9c9278!important}a{color:#f0d77b}
     <p class="muted">The restore option uses the last valid local snapshot saved before a database change. It is available only in this browser.</p>
     <p id="transferMsg" class="muted"></p>
   </div>
-</section>
 
+  <div class="card" id="cloudAuthCard">
+    <h2>Shared Cloud Account</h2>
+    <p class="muted">New accounts created here use AdVora's shared database. This is separate from your existing browser-only demo accounts.</p>
+    <input id="cloudUsername" autocomplete="username" placeholder="Choose username (3–24 characters)">
+    <input id="cloudEmail" type="email" autocomplete="email" placeholder="Email address">
+    <input id="cloudPassword" type="password" autocomplete="new-password" placeholder="Password (minimum 8 characters)">
+    <input id="cloudReferral" placeholder="Referral code (optional)">
+    <button onclick="cloudSignUp()">Create Shared Account</button>
+    <hr style="border:0;border-top:1px solid #403725;margin:15px 0">
+    <h3>Already have a shared account?</h3>
+    <input id="cloudLoginEmail" type="email" autocomplete="username" placeholder="Email address">
+    <input id="cloudLoginPassword" type="password" autocomplete="current-password" placeholder="Password">
+    <button class="secondary" onclick="cloudSignIn()">Login to Shared Account</button>
+    <p id="cloudAuthMsg" aria-live="polite"></p>
+    <p class="muted">Existing local demo accounts are not changed or deleted. Real USDT deposits and withdrawals remain disabled.</p>
+  </div></section>
+
+
+<section id="cloudDashboard" class="hidden">
+  <div class="card">
+    <h2>Shared AdVora Dashboard</h2>
+    <p id="cloudWelcome" class="muted">Your account is connected to the shared database.</p>
+    <p><b>Referral code:</b> <span id="cloudReferralCode">—</span></p>
+    <button class="secondary" onclick="cloudRefresh()">Refresh Cloud Data</button>
+    <button class="danger" onclick="cloudSignOut()">Logout Shared Account</button>
+    <p id="cloudDashMsg" aria-live="polite"></p>
+  </div>
+  <div class="grid">
+    <div class="stat"><small>Package Balance (Demo)</small><strong id="cloudPackageBal">$0.00</strong></div>
+    <div class="stat"><small>Referral Balance (Demo)</small><strong id="cloudReferralBal">$0.00</strong></div>
+    <div class="stat"><small>Active Demo Package</small><strong id="cloudActivePackage">None</strong></div>
+    <div class="stat"><small>Videos Claimed Today</small><strong id="cloudVideoCount">0</strong></div>
+  </div>
+  <div class="card">
+    <h2>Shared Demo Packages</h2>
+    <p class="muted">No payment is taken. These buttons activate a demo package only.</p>
+    <div class="grid">
+      <div class="stat"><small>Starter</small><strong>$10</strong><p class="muted">3 videos per day</p><button onclick="cloudActivatePackage(10)">Activate Demo</button></div>
+      <div class="stat"><small>Basic</small><strong>$30</strong><p class="muted">6 videos per day</p><button onclick="cloudActivatePackage(30)">Activate Demo</button></div>
+      <div class="stat"><small>Standard</small><strong>$50</strong><p class="muted">10 videos per day</p><button onclick="cloudActivatePackage(50)">Activate Demo</button></div>
+      <div class="stat"><small>Premium</small><strong>$100</strong><p class="muted">15 videos per day</p><button onclick="cloudActivatePackage(100)">Activate Demo</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Daily Video Rewards</h2>
+    <p class="muted">Each demo video claim records a $0.17 reward, within your active package limit. This is simulated demo credit only, not real income.</p>
+    <button onclick="cloudClaimVideo()">Claim Demo Video Reward — $0.17</button>
+  </div>
+  <div class="notice">USDT BEP20 deposits and payouts are not active. Do not send money to this demo site. Wallet payments require further secure server-side payment verification and review.</div>
+</section>
 <section id="dashboard" class="hidden">
   <div class="card">
     <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
@@ -1593,5 +1642,133 @@ function migrateOldReferralHistory(){
   if(repairCard && getSessionName()!=="ahmed3") repairCard.classList.add("hidden");
 })();
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+  const SUPABASE_URL = "https://bowcfccdqqhazsllmsou.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_9Hbg3idYHakJPL-TFTpi5Q_X5VrsUZj";
+  let cloudClient = null;
+  let cloudUser = null;
+  let cloudProfile = null;
+  let cloudPackage = null;
+  let cloudTodayClaims = 0;
+  function cloudMsg(id, text, kind) {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = text; el.className = kind || "muted"; }
+  }
+  function cloudMoney(n) { return "$" + (Number(n) || 0).toFixed(2); }
+  function cloudClientReady() {
+    if (!window.supabase || !window.supabase.createClient) {
+      cloudMsg("cloudAuthMsg", "Cloud library did not load. Please refresh the page and try again.", "error");
+      return false;
+    }
+    if (!cloudClient) cloudClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    });
+    return true;
+  }
+  window.cloudSignUp = async function() {
+    if (!cloudClientReady()) return;
+    const username = document.getElementById("cloudUsername").value.trim();
+    const email = document.getElementById("cloudEmail").value.trim();
+    const password = document.getElementById("cloudPassword").value;
+    const referral = document.getElementById("cloudReferral").value.trim().toUpperCase();
+    if (!/^[A-Za-z0-9_]{3,24}$/.test(username)) return cloudMsg("cloudAuthMsg", "Username must be 3–24 letters, numbers, or underscores.", "error");
+    if (!email || password.length < 8) return cloudMsg("cloudAuthMsg", "Enter a valid email and a password of at least 8 characters.", "error");
+    cloudMsg("cloudAuthMsg", "Creating your shared account…");
+    const {data,error} = await cloudClient.auth.signUp({
+      email, password,
+      options: { data: { username, display_name: username, referral_code: referral || null } }
+    });
+    if (error) return cloudMsg("cloudAuthMsg", error.message, "error");
+    if (data.session) {
+      cloudUser = data.user;
+      await cloudLoadDashboard();
+      cloudMsg("cloudAuthMsg", "Shared account created and signed in.", "success");
+    } else {
+      cloudMsg("cloudAuthMsg", "Account request created. Check your email for a confirmation link, then log in here. If no email arrives, check Supabase Auth email settings.", "success");
+    }
+  };
+  window.cloudSignIn = async function() {
+    if (!cloudClientReady()) return;
+    const email = document.getElementById("cloudLoginEmail").value.trim();
+    const password = document.getElementById("cloudLoginPassword").value;
+    if (!email || !password) return cloudMsg("cloudAuthMsg", "Enter your email and password.", "error");
+    cloudMsg("cloudAuthMsg", "Signing in…");
+    const {data,error} = await cloudClient.auth.signInWithPassword({email,password});
+    if (error) return cloudMsg("cloudAuthMsg", error.message, "error");
+    cloudUser = data.user;
+    document.getElementById("cloudLoginPassword").value = "";
+    await cloudLoadDashboard();
+    cloudMsg("cloudAuthMsg", "Signed in to the shared database.", "success");
+  };
+  window.cloudSignOut = async function() {
+    if (!cloudClientReady()) return;
+    const {error} = await cloudClient.auth.signOut();
+    if (error) return cloudMsg("cloudDashMsg", error.message, "error");
+    cloudUser = null; cloudProfile = null; cloudPackage = null; cloudTodayClaims = 0;
+    document.getElementById("cloudDashboard").classList.add("hidden");
+    document.getElementById("auth").classList.remove("hidden");
+    document.getElementById("homeHero").classList.remove("hidden");
+    document.getElementById("homeHighlights").classList.remove("hidden");
+    document.getElementById("cloudLoginPassword").value = "";
+    cloudMsg("cloudAuthMsg", "Logged out of shared account.", "success");
+    window.scrollTo({top:0,behavior:"smooth"});
+  };
+  async function cloudLoadDashboard() {
+    if (!cloudClientReady()) return;
+    const {data:{user},error:authError} = await cloudClient.auth.getUser();
+    if (authError || !user) return cloudMsg("cloudAuthMsg", "Please log in to your shared account.", "error");
+    cloudUser = user;
+    const [{data:profile,error:pErr},{data:wallet,error:wErr},{data:packages,error:pkgErr},{data:claims,error:cErr}] = await Promise.all([
+      cloudClient.from("profiles").select("id,username,referral_code,active_package_id,created_at").eq("id",user.id).single(),
+      cloudClient.from("wallets").select("package_balance,referral_balance").eq("user_id",user.id).single(),
+      cloudClient.from("packages").select("id,price,daily_video_limit,reward_per_video").eq("active",true).order("price"),
+      cloudClient.from("video_claims").select("id,claim_date,slot_number,reward_amount").eq("user_id",user.id).eq("claim_date",new Date().toISOString().slice(0,10))
+    ]);
+    if (pErr || wErr || pkgErr || cErr) return cloudMsg("cloudDashMsg", "Could not load all cloud data: " + ((pErr||wErr||pkgErr||cErr).message || "unknown error"), "error");
+    cloudProfile = profile;
+    cloudTodayClaims = claims.length;
+    cloudPackage = packages.find(p => Number(p.id) === Number(profile.active_package_id)) || null;
+    document.getElementById("cloudWelcome").textContent = "Welcome, " + (profile.username || user.email) + ". This account uses the shared AdVora database.";
+    document.getElementById("cloudReferralCode").textContent = profile.referral_code || "Not assigned";
+    document.getElementById("cloudPackageBal").textContent = cloudMoney(wallet.package_balance);
+    document.getElementById("cloudReferralBal").textContent = cloudMoney(wallet.referral_balance);
+    document.getElementById("cloudActivePackage").textContent = cloudPackage ? cloudMoney(cloudPackage.price) : "None";
+    document.getElementById("cloudVideoCount").textContent = String(claims.length) + (cloudPackage ? "/" + cloudPackage.daily_video_limit : "");
+    document.getElementById("cloudDashboard").classList.remove("hidden");
+    document.getElementById("auth").classList.add("hidden");
+    document.getElementById("homeHero").classList.add("hidden");
+    document.getElementById("homeHighlights").classList.add("hidden");
+    document.getElementById("dashboard").classList.add("hidden");
+    cloudMsg("cloudDashMsg", "Cloud data loaded. Balances and video claims are stored in Supabase.", "success");
+    document.getElementById("cloudDashboard").scrollIntoView({behavior:"smooth",block:"start"});
+  }
+  window.cloudRefresh = async function(){ await cloudLoadDashboard(); };
+  window.cloudActivatePackage = async function(price) {
+    if (!cloudClientReady() || !cloudUser) return cloudMsg("cloudDashMsg","Please log in first.","error");
+    const {data:pkg,error:findError} = await cloudClient.from("packages").select("id").eq("price",price).eq("active",true).single();
+    if (findError || !pkg) return cloudMsg("cloudDashMsg","Could not find that demo package.","error");
+    const {error} = await cloudClient.rpc("activate_demo_package",{p_package_id:pkg.id});
+    if (error) return cloudMsg("cloudDashMsg",error.message,"error");
+    await cloudLoadDashboard();
+    cloudMsg("cloudDashMsg", "Demo package activated. No payment was taken.", "success");
+  };
+  window.cloudClaimVideo = async function() {
+    if (!cloudClientReady() || !cloudUser) return cloudMsg("cloudDashMsg","Please log in first.","error");
+    const {error} = await cloudClient.rpc("claim_demo_video");
+    if (error) return cloudMsg("cloudDashMsg",error.message,"error");
+    await cloudLoadDashboard();
+    cloudMsg("cloudDashMsg", "Demo video reward recorded in the shared database.", "success");
+  };
+  if (cloudClientReady()) {
+    cloudClient.auth.getSession().then(({data,error}) => {
+      if (!error && data.session) cloudLoadDashboard();
+    });
+  }
+})();
+</script>
+
 </body>
 </html>
