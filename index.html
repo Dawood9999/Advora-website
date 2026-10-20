@@ -820,6 +820,11 @@ footer{color:#9c9278!important}a{color:#f0d77b}
     <p class="muted">Each demo video claim records a $0.17 reward, within your active package limit. This is simulated demo credit only, not real income.</p>
     <button onclick="cloudClaimVideo()">Claim Demo Video Reward — $0.17</button>
   </div>
+  <div class="card">
+    <h2>Shared Referral Team</h2>
+    <p class="muted">Downline members in your referral tree, loaded from the shared database.</p>
+    <div class="tablewrap"><table><thead><tr><th>Username</th><th>Level</th><th>Joined</th><th>Demo Package</th></tr></thead><tbody id="cloudTeamRows"><tr><td colspan="4">Loading team…</td></tr></tbody></table></div>
+  </div>
   <div class="notice">USDT BEP20 deposits and payouts are not active. Do not send money to this demo site. Wallet payments require further secure server-side payment verification and review.</div>
 </section>
 <section id="dashboard" class="hidden">
@@ -1743,7 +1748,17 @@ function migrateOldReferralHistory(){
     document.getElementById("homeHighlights").classList.add("hidden");
     document.getElementById("dashboard").classList.add("hidden");
     cloudMsg("cloudDashMsg", "Cloud data loaded. Balances and video claims are stored in Supabase.", "success");
+    const {data:teamData,error:teamError} = await cloudClient.rpc("get_my_referral_team");
+    const teamBody = document.getElementById("cloudTeamRows");
+    if (teamBody) {
+      if (teamError) teamBody.innerHTML = '<tr><td colspan="4">Team list could not load.</td></tr>';
+      else if (!teamData || !teamData.length) teamBody.innerHTML = '<tr><td colspan="4">No downline members yet.</td></tr>';
+      else teamBody.innerHTML = teamData.map(member => '<tr><td>' + cloudEscape(member.username || "Member") + '</td><td>' + Number(member.level) + '</td><td>' + cloudEscape(member.created_at ? new Date(member.created_at).toLocaleDateString() : "—") + '</td><td>' + (member.package_price ? cloudMoney(member.package_price) : "None") + '</td></tr>').join("");
+    }
     document.getElementById("cloudDashboard").scrollIntoView({behavior:"smooth",block:"start"});
+  }
+  function cloudEscape(value) {
+    return String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   }
   window.cloudRefresh = async function(){ await cloudLoadDashboard(); };
   window.cloudActivatePackage = async function(price) {
