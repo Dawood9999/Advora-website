@@ -1668,9 +1668,20 @@ function migrateOldReferralHistory(){
       cloudMsg("cloudAuthMsg", "Cloud library did not load. Please refresh the page and try again.", "error");
       return false;
     }
-    if (!cloudClient) cloudClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
-    });
+    if (!cloudClient) {
+      cloudClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+        auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+      });
+      cloudClient.auth.onAuthStateChange((event) => {
+        if (event === "PASSWORD_RECOVERY") {
+          document.getElementById("cloudPasswordResetPanel").classList.remove("hidden");
+          document.getElementById("cloudDashboard").classList.add("hidden");
+          document.getElementById("auth").classList.remove("hidden");
+          cloudMsg("cloudAuthMsg", "Reset link verified. Enter your new password below.", "success");
+          window.scrollTo({top:0,behavior:"smooth"});
+        }
+      });
+    }
     return true;
   }
   window.cloudSignUp = async function() {
@@ -1697,6 +1708,33 @@ function migrateOldReferralHistory(){
     } else {
       cloudMsg("cloudAuthMsg", "Account request created. Check your email for a confirmation link, then log in here. If no email arrives, check Supabase Auth email settings.", "success");
     }
+  };
+  window.cloudSendPasswordReset = async function() {
+    if (!cloudClientReady()) return;
+    const email = document.getElementById("cloudLoginEmail").value.trim();
+    if (!email) return cloudMsg("cloudAuthMsg", "Enter the account email first, then click Forgot Password.", "error");
+    cloudMsg("cloudAuthMsg", "Sending password reset email…");
+    const {error} = await cloudClient.auth.resetPasswordForEmail(email, {
+      redirectTo: "https://dawood9999.github.io/Advora-website/"
+    });
+    if (error) return cloudMsg("cloudAuthMsg", error.message, "error");
+    cloudMsg("cloudAuthMsg", "Reset email sent. Open the newest email link; this page should then show the new-password fields.", "success");
+  };
+  window.cloudSaveNewPassword = async function() {
+    if (!cloudClientReady()) return;
+    const password = document.getElementById("cloudNewPassword").value;
+    const confirm = document.getElementById("cloudConfirmPassword").value;
+    if (password.length < 8) return cloudMsg("cloudResetMsg", "Use at least 8 characters.", "error");
+    if (password !== confirm) return cloudMsg("cloudResetMsg", "The passwords do not match.", "error");
+    const {data:{user},error:userError} = await cloudClient.auth.getUser();
+    if (userError || !user) return cloudMsg("cloudResetMsg", "This reset link may have expired. Request a new one and use the newest email.", "error");
+    const {error} = await cloudClient.auth.updateUser({password});
+    if (error) return cloudMsg("cloudResetMsg", error.message, "error");
+    document.getElementById("cloudNewPassword").value = "";
+    document.getElementById("cloudConfirmPassword").value = "";
+    document.getElementById("cloudPasswordResetPanel").classList.add("hidden");
+    cloudMsg("cloudAuthMsg", "Password updated. You can now sign in with the new password.", "success");
+    await cloudClient.auth.signOut();
   };
   window.cloudSignIn = async function() {
     if (!cloudClientReady()) return;
