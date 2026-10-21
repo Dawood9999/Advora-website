@@ -780,6 +780,7 @@ footer{color:#9c9278!important}a{color:#f0d77b}
     <input id="cloudPassword" type="password" autocomplete="new-password" placeholder="Password (minimum 8 characters)">
     <input id="cloudReferral" placeholder="Referral code (optional)">
     <button onclick="cloudSignUp()">Create Shared Account</button>
+    <button type="button" class="secondary" onclick="cloudResendConfirmation()">Resend Confirmation Email</button>
     <hr style="border:0;border-top:1px solid #403725;margin:15px 0">
     <h3>Already have a shared account?</h3>
     <input id="cloudLoginEmail" type="email" autocomplete="username" placeholder="Email address">
@@ -1726,8 +1727,29 @@ function migrateOldReferralHistory(){
     const {error} = await cloudClient.auth.resetPasswordForEmail(email, {
       redirectTo: "https://dawood9999.github.io/Advora-website/"
     });
-    if (error) return cloudMsg("cloudAuthMsg", error.message, "error");
+    if (error) {
+      const msg = /email.*invalid|email not confirmed/i.test(error.message)
+        ? "This email may not be confirmed yet. First use Resend Confirmation Email, open the newest confirmation message, and confirm the account. Then try password reset."
+        : error.message;
+      return cloudMsg("cloudAuthMsg", msg, "error");
+    }
     cloudMsg("cloudAuthMsg", "Reset email sent. Open the newest email link; this page should then show the new-password fields.", "success");
+  };
+  window.cloudResendConfirmation = async function() {
+    if (!cloudClientReady()) return;
+    const signupEmail = document.getElementById("cloudEmail").value.trim();
+    const loginEmail = document.getElementById("cloudLoginEmail").value.trim();
+    const email = loginEmail || signupEmail;
+    if (!email) return cloudMsg("cloudAuthMsg", "Enter your account email in either email field first.", "error");
+    cloudMsg("cloudAuthMsg", "Requesting a confirmation email…");
+    const {error} = await cloudClient.auth.resend({type:"signup", email});
+    if (error) {
+      const msg = /rate limit|too many|over_email_send_rate_limit/i.test(error.message)
+        ? "Email sending is temporarily rate-limited. Please wait before trying again; do not keep clicking."
+        : error.message;
+      return cloudMsg("cloudAuthMsg", msg, "error");
+    }
+    cloudMsg("cloudAuthMsg", "Confirmation email requested. Open the newest message and click its confirmation link before logging in.", "success");
   };
   window.cloudSaveNewPassword = async function() {
     if (!cloudClientReady()) return;
