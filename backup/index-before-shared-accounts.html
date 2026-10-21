@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdVora - Demo Rewards</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:Arial,sans-serif;
+  background:#f1f5f9;color:#172033
+}
+header{
+  background:linear-gradient(120deg,#10213e,#4338ca);
+  color:white;padding:24px 15px;text-align:center
+}
+header h1{margin:0;font-size:32px}
+header p{margin:8px 0 0;color:#e0e7ff}
+.container{max-width:1000px;margin:20px auto;padding:0 14px}
+.card{
+  background:white;padding:20px;border-radius:14px;
+  margin-bottom:18px;box-shadow:0 4px 15px #0000000c
+}
+h2{font-size:20px;margin-top:0;color:#243b75}
+input,button{
+  width:100%;padding:12px;margin:6px 0;
+  border-radius:8px;font-size:15px
+}
+input{border:1px solid #cbd5e1}
+button{
+  border:0;background:#4338ca;color:white;
+  cursor:pointer;font-weight:bold
+}
+button:hover{opacity:.9}
+button.secondary{background:#0f766e}
+button.danger{background:#b91c1c}
+button:disabled{background:#94a3b8;cursor:not-allowed}
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px
+}
+.stat{
+  padding:17px;border-radius:12px;background:#eef2ff;
+  border:1px solid #e0e7ff
+}
+.stat small{display:block;color:#475569;margin-bottom:8px}
+.stat strong{font-size:24px;color:#312e81;overflow-wrap:anywhere}
+.muted{color:#64748b;font-size:13px;line-height:1.6}
+.notice{
+  padding:12px;background:#fffbeb;border:1px solid #fde68a;
+  border-radius:9px;font-size:13px;line-height:1.6
+}
+.success{color:#047857}
+.error{color:#b91c1c}
+.hidden{display:none!important}
+.linkbox{
+  background:#f8fafc;padding:12px;border:1px dashed #94a3b8;
+  border-radius:8px;overflow-wrap:anywhere;font-size:14px
+}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:10px 7px;border-bottom:1px solid #e2e8f0;text-align:left}
+th{background:#f8fafc}
+.tablewrap{overflow-x:auto}
+footer{text-align:center;padding:20px;color:#64748b;font-size:12px}
+
+
+/* AdVora premium visual refresh — presentation only; demo logic unchanged */
+:root{
+  --navy:#0b1630;--navy2:#14264a;--blue:#4169e1;--teal:#0f9f91;
+  --ink:#18243b;--muted:#66758f;--line:#e4eaf3;--surface:#ffffff;
+  --page:#f4f7fc;--shadow:0 12px 32px rgba(19,35,70,.08)
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  background:radial-gradient(ellipse at 10% 0%,#e4ecff 0,transparent 34%),var(--page);
+  color:var(--ink);line-height:1.55
+}
+header{
+  position:relative;overflow:hidden;text-align:left;padding:32px max(22px,calc((100% - 1080px)/2));
+  background:linear-gradient(120deg,#0a1530 0%,#172d59 56%,#3d54c8 100%);
+  border-bottom:3px solid #24c4ad;box-shadow:0 10px 28px rgba(10,21,48,.18)
+}
+header:after{
+  content:"";position:absolute;width:270px;height:270px;border:1px solid #ffffff20;
+  border-radius:50%;right:8%;top:-155px;box-shadow:0 0 0 28px #ffffff08,0 0 0 58px #ffffff06;pointer-events:none
+}
+header h1{position:relative;z-index:1;font-size:clamp(30px,4vw,40px);letter-spacing:-1.3px;font-weight:850}
+header h1:before{content:"A";display:inline-grid;place-items:center;width:43px;height:43px;margin-right:12px;border-radius:13px;background:linear-gradient(135deg,#35d6bd,#5b7cff);color:white;font-size:25px;vertical-align:3px;box-shadow:0 5px 16px #0003}
+header p{position:relative;z-index:1;margin:7px 0 0 56px!important;color:#d5e1ff!important;font-size:14px;letter-spacing:.25px}
+.container{max-width:1100px;margin:28px auto;padding:0 20px}
+.notice{border-radius:13px;padding:14px 17px;background:#fff9e8;border:1px solid #f5df9d;color:#765515;box-shadow:0 5px 15px #6d54100a;margin-bottom:22px}
+.card{position:relative;background:var(--surface);padding:23px;border:1px solid #e7edf6;border-radius:17px;margin-bottom:20px;box-shadow:var(--shadow);transition:transform .18s ease,box-shadow .18s ease}
+.card h2{display:flex;align-items:center;gap:10px;font-size:19px;letter-spacing:-.25px;color:#172d59;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid #edf1f7}
+.card h2:before{content:"";display:inline-block;width:4px;height:21px;border-radius:4px;background:linear-gradient(#3c6be8,#22b8a4);flex:none}
+#auth{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:stretch}
+#auth .card{margin-bottom:0}
+input,select,textarea{width:100%;padding:13px 14px;margin:7px 0;border:1px solid #d7e0ed;border-radius:10px;background:#fbfcff;color:var(--ink);font:inherit;outline:none;transition:border-color .18s,box-shadow .18s}
+input:focus,select:focus,textarea:focus{border-color:#6788ef;box-shadow:0 0 0 3px #4169e11c;background:#fff}
+button{width:100%;padding:12px 16px;margin:7px 0;border:1px solid transparent;border-radius:10px;background:linear-gradient(135deg,#4169e1,#3448b9);color:white;cursor:pointer;font:inherit;font-weight:750;letter-spacing:.1px;box-shadow:0 5px 12px #4169e122;transition:transform .16s,box-shadow .16s,filter .16s}
+button:hover{opacity:1;filter:brightness(1.04);transform:translateY(-1px);box-shadow:0 8px 18px #4169e12b}
+button:active{transform:translateY(0)}
+button.secondary{background:linear-gradient(135deg,#0f9f91,#087b78);box-shadow:0 5px 12px #0f9f9122}
+button.danger{background:linear-gradient(135deg,#e05261,#b92743);box-shadow:0 5px 12px #b9274322}
+button:disabled{background:#b8c2d3;box-shadow:none;transform:none;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.stat{position:relative;overflow:hidden;padding:19px;border-radius:14px;background:linear-gradient(145deg,#f8faff,#eef3ff);border:1px solid #e0e8fb;min-width:0}
+.stat:after{content:"";position:absolute;width:70px;height:70px;right:-30px;top:-30px;border-radius:50%;background:#5979df0c}
+.stat small{display:block;color:#61718c;margin-bottom:8px;font-size:12px;font-weight:750;letter-spacing:.55px;text-transform:uppercase}
+.stat strong{position:relative;z-index:1;font-size:clamp(22px,2.5vw,28px);font-weight:850;color:#253f86;overflow-wrap:anywhere;letter-spacing:-.5px}
+.stat button{position:relative;z-index:1}
+.muted{color:var(--muted);font-size:13px;line-height:1.7}
+.linkbox{background:#f7faff;padding:14px;border:1px dashed #9aafd7;border-radius:11px;overflow-wrap:anywhere;font-size:14px;color:#28447f}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
+th,td{padding:12px 13px;border-bottom:1px solid #edf1f7;text-align:left;vertical-align:top}
+th{background:#f3f6fc;color:#304366;font-size:11px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+tr:last-child td{border-bottom:0}tbody tr:hover{background:#f8faff}
+.success{color:#087e68;font-weight:650}.error{color:#bd3345;font-weight:650}
+footer{max-width:1100px;margin:10px auto 0;padding:24px 20px 30px;color:#74819a;font-size:12px;border-top:1px solid #e2e8f2}
+#dashboard .card:first-child{background:linear-gradient(120deg,#fff,#f4f7ff);border-color:#dfe7fa}
+#dashboard .card:first-child h2{border-bottom:0;padding-bottom:0;margin-bottom:5px}
+#dashboard .card:first-child h2:before{display:none}
+#dashboard .card:first-child button{max-width:150px}
+.hidden{display:none!important}
+@media(max-width:680px){
+  header{padding:25px 20px}header h1{font-size:31px}header p{margin-left:0!important}
+  .container{margin:18px auto;padding:0 12px}#auth{grid-template-columns:1fr;gap:14px}
+  .card{padding:18px;border-radius:14px}.grid{grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
+  .stat{padding:15px}th,td{padding:10px;font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+
+
+/* AdVora Black & Gold Luxury Theme — visual styling only; all demo logic/data keys preserved */
+:root{
+  --navy:#090909;--navy2:#171717;--blue:#c9a85a;--teal:#b99545;
+  --ink:#f3eee2;--muted:#b8b0a0;--line:#423823;--surface:#151515;
+  --page:#0b0b0b;--shadow:0 14px 36px rgba(0,0,0,.35);
+}
+html{scroll-behavior:smooth;background:var(--page)}
+body{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  background:radial-gradient(ellipse at 12% 0%,#292211 0,transparent 32%),linear-gradient(180deg,#0b0b0b,#101010 55%,#090909);
+  color:var(--ink);line-height:1.6
+}
+header{
+  position:relative;overflow:hidden;text-align:left;
+  padding:32px max(22px,calc((100% - 1080px)/2));
+  background:linear-gradient(120deg,#050505 0%,#17130b 58%,#302515 100%);
+  border-bottom:2px solid #c9a85a;box-shadow:0 12px 34px #0008
+}
+header:after{
+  content:"";position:absolute;width:270px;height:270px;border:1px solid #d5b96b30;
+  border-radius:50%;right:8%;top:-155px;
+  box-shadow:0 0 0 28px #d5b96b0c,0 0 0 58px #d5b96b08;pointer-events:none
+}
+header h1{position:relative;z-index:1;font-size:clamp(30px,4vw,40px);letter-spacing:1px;font-weight:850;color:#e4c477}
+header h1:before{
+  content:"A";display:inline-grid;place-items:center;width:43px;height:43px;margin-right:12px;
+  border-radius:13px;background:linear-gradient(135deg,#f0d88b,#9d7830);color:#111;
+  font-size:25px;vertical-align:3px;box-shadow:0 5px 18px #0008
+}
+header p{position:relative;z-index:1;margin:7px 0 0 56px!important;color:#d0c4a4!important;font-size:14px;letter-spacing:.4px}
+.container{max-width:1100px;margin:28px auto;padding:0 20px}
+.notice{border-radius:13px;padding:14px 17px;background:#211b0e;border:1px solid #80652c;color:#e7d5a5;box-shadow:0 5px 15px #0003;margin-bottom:22px}
+.card{position:relative;background:linear-gradient(145deg,#181818,#121212);padding:23px;border:1px solid #3a3221;border-radius:17px;margin-bottom:20px;box-shadow:var(--shadow);transition:transform .18s ease,box-shadow .18s ease}
+.card h2{display:flex;align-items:center;gap:10px;font-size:19px;letter-spacing:.1px;color:#e2c16f;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid #332b1b}
+.card h2:before{content:"";display:inline-block;width:4px;height:21px;border-radius:4px;background:linear-gradient(#f0d88b,#9d7830);flex:none}
+#auth{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:stretch}
+#auth .card{margin-bottom:0}
+input,select,textarea{width:100%;padding:13px 14px;margin:7px 0;border:1px solid #49402d;border-radius:10px;background:#0d0d0d;color:#f4eddd;font:inherit;outline:none;transition:border-color .18s,box-shadow .18s}
+input::placeholder,textarea::placeholder{color:#8f8777}
+input:focus,select:focus,textarea:focus{border-color:#c9a85a;box-shadow:0 0 0 3px #c9a85a24;background:#111}
+button{width:100%;padding:12px 16px;margin:7px 0;border:1px solid #d7b96a;border-radius:10px;background:linear-gradient(135deg,#e0c16e,#a78335);color:#15120b;cursor:pointer;font:inherit;font-weight:800;letter-spacing:.15px;box-shadow:0 5px 14px #0004;transition:transform .16s,box-shadow .16s,filter .16s}
+button:hover{opacity:1;filter:brightness(1.08);transform:translateY(-1px);box-shadow:0 8px 18px #0006}
+button:active{transform:translateY(0)}
+button.secondary{background:linear-gradient(135deg,#d4b45e,#8f6e2d);border-color:#e4c879;color:#15120b;box-shadow:0 5px 12px #0004}
+button.danger{background:linear-gradient(135deg,#a63d35,#6f211e);border-color:#c65c50;color:#fff2ed;box-shadow:0 5px 12px #0004}
+button:disabled{background:#39352c;color:#8b8475;border-color:#454033;box-shadow:none;transform:none;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.stat{position:relative;overflow:hidden;padding:19px;border-radius:14px;background:linear-gradient(145deg,#211d14,#171717);border:1px solid #514126;min-width:0}
+.stat:after{content:"";position:absolute;width:70px;height:70px;right:-30px;top:-30px;border-radius:50%;background:#d5b96b12}
+.stat small{display:block;color:#c0b18c;margin-bottom:8px;font-size:12px;font-weight:750;letter-spacing:.65px;text-transform:uppercase}
+.stat strong{position:relative;z-index:1;font-size:clamp(22px,2.5vw,28px);font-weight:850;color:#e4c477;overflow-wrap:anywhere;letter-spacing:-.5px}
+.stat button{position:relative;z-index:1}
+.muted{color:#b4ac9b;font-size:13px;line-height:1.7}
+.linkbox{background:#0e0e0e;padding:14px;border:1px dashed #9a7c3c;border-radius:11px;overflow-wrap:anywhere;font-size:14px;color:#e1c576}
+.tablewrap{overflow-x:auto;border:1px solid #403725;border-radius:12px;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;background:#141414;color:#e9e2d2}
+th,td{padding:12px 13px;border-bottom:1px solid #302a1e;text-align:left;vertical-align:top}
+th{background:#211c12;color:#e1c576;font-size:11px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+tr:last-child td{border-bottom:0}tbody tr:hover{background:#201c14}
+.success{color:#8bd5ad;font-weight:650}.error{color:#ff9b91;font-weight:650}
+footer{max-width:1100px;margin:10px auto 0;padding:24px 20px 30px;color:#958b76;font-size:12px;border-top:1px solid #342c1c}
+#dashboard .card:first-child{background:linear-gradient(120deg,#191919,#211b10);border-color:#6c5528}
+#dashboard .card:first-child h2{border-bottom:0;padding-bottom:0;margin-bottom:5px}
+#dashboard .card:first-child h2:before{display:none}
+#dashboard .card:first-child button{max-width:150px}
+.hidden{display:none!important}
+@media(max-width:680px){
+  header{padding:25px 20px}header h1{font-size:31px}header p{margin-left:0!important}
+  .container{margin:18px auto;padding:0 12px}#auth{grid-template-columns:1fr;gap:14px}
+  .card{padding:18px;border-radius:14px}.grid{grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
+  .stat{padding:15px}th,td{padding:10px;font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+
+
+/* Referral Tree — visual only; reads existing referrer links */
+/* Referral genealogy tree: connected horizontal branches */
+.referral-tree{margin-top:14px;padding:24px 16px;border:1px solid #dbe4f0;border-radius:16px;background:linear-gradient(145deg,#f8fbff,#edf4fb);overflow:auto;text-align:center}
+.tree-root-wrap{display:flex;justify-content:center;margin-bottom:0;position:relative;padding-bottom:28px}
+.tree-root{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border:1px solid #9eb8ff;border-radius:14px;background:linear-gradient(135deg,#173b7a,#315bd5);color:#fff;font-weight:800;box-shadow:0 8px 22px #244a8c25;white-space:nowrap}
+.tree-root-wrap:after{content:"";position:absolute;top:100%;height:28px;border-left:2px solid #9aaec9}
+.tree-teams{display:flex;justify-content:center;align-items:flex-start;gap:0;min-width:max-content;margin:0 auto}
+.tree-team{position:relative;display:flex;flex-direction:column;align-items:center;min-width:145px;padding:0 12px;border:0;border-radius:0;background:transparent}
+.tree-team-title{color:#315bd5;font-size:11px;font-weight:800;text-align:center;letter-spacing:.7px;padding:0 8px 8px;margin:0}
+.tree-node{position:relative;display:flex;flex-direction:column;align-items:center;margin:0;padding:0;border:0;background:transparent;color:#172033;overflow:visible}
+.tree-node-card{position:relative;z-index:1;min-width:112px;max-width:165px;padding:11px 14px;border:1px solid #d8e2f0;border-radius:12px;background:#fff;box-shadow:0 5px 15px #1c355b12;overflow-wrap:anywhere}
+.tree-node-name{font-weight:800;color:#183a72;font-size:13px}
+.tree-node-meta{font-size:11px;color:#63738b;margin-top:5px;white-space:nowrap}
+.tree-children{display:flex;align-items:flex-start;justify-content:center;position:relative;padding-top:28px;margin-top:0;gap:0}
+.tree-children:before{content:"";position:absolute;top:0;left:50%;height:28px;border-left:2px solid #9aaec9}
+.tree-children>.tree-node{padding:0 10px}
+.tree-children>.tree-node:before{content:"";position:absolute;top:0;left:0;right:0;border-top:2px solid #9aaec9}
+.tree-children>.tree-node:first-child:before{left:50%}
+.tree-children>.tree-node:last-child:before{right:50%}
+.tree-children>.tree-node:only-child:before{display:none}
+.tree-children>.tree-node>.tree-node-card:before{content:"";position:absolute;bottom:100%;left:50%;height:28px;border-left:2px solid #9aaec9}
+.tree-empty{padding:16px;border:1px dashed #bac9dc;border-radius:10px;color:#63738b;text-align:center;font-size:13px}
+@media(max-width:520px){.referral-tree{padding:18px 10px}.tree-node-card{min-width:100px;padding:9px 10px}.tree-children>.tree-node{padding:0 7px}.tree-node-meta{font-size:10px}}
+
+
+/* AdVora homepage refresh — presentation only */
+.site-header{padding:0!important;background:linear-gradient(115deg,#09152f 0%,#142b58 60%,#344fc1 100%)!important;border-bottom:3px solid #24c7b0;box-shadow:0 12px 34px #0b163026}
+.site-header:after{right:8%;top:-170px;border-color:#ffffff18;box-shadow:0 0 0 28px #ffffff06,0 0 0 58px #ffffff05}
+.header-inner{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:23px 20px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand-lockup{display:flex;align-items:center;gap:13px}
+.brand-mark{display:grid;place-items:center;width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,#35d8c0,#5b7cff);color:#fff;font-size:28px;font-weight:900;box-shadow:0 8px 20px #0003}
+.site-header .brand-lockup h1{margin:0;color:#fff;font-size:31px;line-height:1;letter-spacing:-1px}
+.site-header .brand-lockup p{margin:7px 0 0!important;color:#b9d2ff!important;font-size:10px!important;font-weight:800;letter-spacing:2.3px}
+.site-header .brand-lockup p span{color:#36d5bd}
+.header-pill{display:flex;align-items:center;gap:9px;padding:10px 14px;border:1px solid #ffffff30;border-radius:999px;color:#dce8ff;font-size:10px;font-weight:800;letter-spacing:1.3px;background:#ffffff0c}
+.status-dot,.chip-dot{width:7px;height:7px;border-radius:50%;background:#38d9b8;box-shadow:0 0 0 4px #38d9b822}
+.home-hero{position:relative;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);gap:34px;align-items:center;min-height:460px;margin:8px 0 24px;padding:46px 42px;overflow:hidden;border-radius:26px;background:radial-gradient(ellipse at 82% 45%,#293e7c 0,transparent 38%),linear-gradient(120deg,#0b1733 0%,#12264e 60%,#1c3671 100%);box-shadow:0 22px 50px #12234c25;color:#fff}
+.home-hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(#ffffff06 1px,transparent 1px),linear-gradient(90deg,#ffffff06 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(90deg,transparent,#000 60%);pointer-events:none}
+.hero-copy,.hero-art{position:relative;z-index:1;min-width:0}
+.eyebrow{display:flex;align-items:center;gap:10px;color:#8ce8dc;font-size:10px;font-weight:850;letter-spacing:1.7px;line-height:1.6}
+.eyebrow-line{width:25px;height:2px;background:#36d4bd;border-radius:4px}
+.hero-copy h2{margin:22px 0 15px!important;display:block!important;border:0!important;padding:0!important;color:#fff!important;font-size:clamp(34px,4vw,52px)!important;line-height:1.08;letter-spacing:-1.8px;font-weight:850}
+.hero-copy h2:before{display:none!important}
+.hero-copy h2 span{color:#5de0ca}
+.hero-description{max-width:470px;margin:0;color:#c5d2ef;font-size:14px;line-height:1.9}
+.hero-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:26px}
+.hero-primary{display:inline-flex;align-items:center;gap:22px;padding:13px 18px;border-radius:11px;background:linear-gradient(135deg,#32d7be,#1ab49f);color:#06253a;text-decoration:none;font-weight:850;font-size:13px;box-shadow:0 8px 22px #20cbb333;transition:transform .18s,box-shadow .18s}
+.hero-primary:hover{transform:translateY(-2px);box-shadow:0 12px 26px #20cbb34a}
+.hero-primary span{font-size:18px}
+.hero-secondary{display:flex;align-items:center;gap:8px;color:#d5e0f8;font-size:11px;font-weight:650}
+.hero-check{display:grid;place-items:center;width:19px;height:19px;border-radius:50%;background:#ffffff16;color:#6be2cb}
+.hero-features{display:flex;gap:18px;flex-wrap:wrap;margin-top:34px;padding-top:22px;border-top:1px solid #ffffff20}
+.hero-features>div{display:flex;align-items:center;gap:9px;min-width:120px}
+.feature-icon{display:grid;place-items:center;width:32px;height:32px;border:1px solid #ffffff25;border-radius:10px;background:#ffffff0c;color:#67e1ce;font-size:15px}
+.hero-features b,.hero-features small{display:block}
+.hero-features b{color:#f5f8ff;font-size:10px}
+.hero-features small{margin-top:3px;color:#9eafd2;font-size:9px}
+.hero-art{display:flex;align-items:center;justify-content:center;min-height:320px}
+.art-glow{position:absolute;width:280px;height:280px;border-radius:50%;background:#4e68e9;filter:blur(65px);opacity:.25}
+.preview-window{position:relative;width:min(100%,360px);padding:17px;border:1px solid #ffffff30;border-radius:19px;background:linear-gradient(145deg,#ffffff18,#ffffff09);box-shadow:0 25px 55px #0004;backdrop-filter:blur(12px);transform:rotate(2deg)}
+.preview-top{display:flex;align-items:center;gap:9px;padding-bottom:15px;border-bottom:1px solid #ffffff1a;color:#aebfe3;font-size:8px;font-weight:850;letter-spacing:1.2px}
+.preview-dots{display:flex;gap:4px}.preview-dots i{width:5px;height:5px;border-radius:50%;background:#7890bd}.preview-dots i:first-child{background:#51d7bf}
+.preview-top>span:nth-of-type(1){margin-left:3px}.preview-live{margin-left:auto;padding:4px 7px;border-radius:5px;background:#37d4b51c;color:#65e5d0;font-size:8px}
+.preview-welcome{display:flex;flex-direction:column;gap:5px;padding:20px 2px 15px}
+.preview-welcome small,.preview-balance small{color:#8fa5ce;font-size:8px;font-weight:850;letter-spacing:1.4px}
+.preview-welcome strong{color:#fff;font-size:20px;letter-spacing:-.5px}
+.preview-welcome>span{color:#b3c2df;font-size:10px}
+.preview-balance{display:flex;align-items:center;justify-content:space-between;padding:16px;border:1px solid #ffffff20;border-radius:12px;background:linear-gradient(120deg,#ffffff13,#ffffff06)}
+.preview-balance strong{display:block;margin-top:6px;color:#fff;font-size:29px;letter-spacing:-1px}
+.balance-symbol{display:grid;place-items:center;width:37px;height:37px;border-radius:11px;background:#3bd7bf22;color:#6ce6d3;font-size:21px}
+.preview-bars{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.preview-bars>div{padding:12px;border:1px solid #ffffff18;border-radius:10px;background:#ffffff08}
+.preview-bars span,.preview-bars b{display:block}.preview-bars span{color:#9fb1d5;font-size:8px}.preview-bars b{margin-top:6px;color:#e7efff;font-size:10px}
+.preview-bars i{display:block;height:4px;margin-top:11px;border-radius:4px;background:#ffffff17;overflow:hidden}.preview-bars em{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#38d7bd,#6882ff)}
+.preview-foot{display:flex;align-items:center;gap:9px;margin-top:13px;padding-top:13px;border-top:1px solid #ffffff1a}
+.preview-avatar{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,#3bd9bf,#5e7dff);color:#fff;font-weight:900}
+.preview-foot b,.preview-foot small{display:block}.preview-foot b{color:#f3f6ff;font-size:9px}.preview-foot small{margin-top:3px;color:#9eafd2;font-size:8px}.preview-arrow{margin-left:auto;color:#68e2cf;font-size:16px}
+.floating-chip{position:absolute;display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid #ffffff30;border-radius:10px;background:#172b56eF;color:#e6edff;box-shadow:0 12px 26px #0003;font-size:9px;font-weight:750;white-space:nowrap}
+.chip-top{top:13px;right:-6px}.chip-top>span{color:#63e4d0;font-size:15px}.chip-bottom{bottom:5px;left:-8px}.chip-bottom .chip-dot{width:6px;height:6px}
+#auth{scroll-margin-top:20px}
+@media(max-width:850px){.home-hero{grid-template-columns:1fr;gap:16px;padding:36px 30px}.hero-art{min-height:330px}.hero-copy h2{font-size:42px!important}.chip-top{right:0}.chip-bottom{left:0}}
+@media(max-width:520px){.header-inner{padding:19px 16px}.site-header .brand-lockup h1{font-size:27px}.brand-mark{width:42px;height:42px}.header-pill{padding:8px 10px;font-size:8px;letter-spacing:.8px}.home-hero{padding:30px 21px;border-radius:20px;min-height:0}.eyebrow{font-size:8px;letter-spacing:1px}.hero-copy h2{font-size:36px!important;letter-spacing:-1.2px;margin-top:18px!important}.hero-description{font-size:13px}.hero-features{gap:14px}.hero-art{min-height:300px}.preview-window{padding:13px}.chip-top{top:0;right:-3px}.chip-bottom{bottom:-3px;left:-3px}.floating-chip{font-size:8px;padding:8px 9px}.notice{font-size:12px}}
+
+
+/* AdVora homepage details — visual-only feature section */
+.home-highlights{margin:30px 0 34px}
+.highlights-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin:0 2px 18px}
+.section-kicker{display:block;color:#168f88;font-size:10px;font-weight:850;letter-spacing:1.7px;margin-bottom:8px}
+.highlights-heading h2{display:block!important;margin:0!important;padding:0!important;border:0!important;color:#172d59!important;font-size:clamp(23px,3vw,31px)!important;letter-spacing:-.8px}
+.highlights-heading h2:before{display:none!important}
+.highlights-heading h2 span{color:#168f99}
+.highlights-heading>p{max-width:330px;margin:0 0 3px;color:#65738d;font-size:12px;line-height:1.8}
+.highlight-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.highlight-card{position:relative;min-width:0;overflow:hidden;padding:23px 22px 20px;border:1px solid #e3eaf5;border-radius:17px;background:linear-gradient(155deg,#fff 0%,#f8faff 100%);box-shadow:0 9px 24px #1b37630b;transition:transform .18s,box-shadow .18s,border-color .18s}
+.highlight-card:hover{transform:translateY(-3px);border-color:#c9d8f5;box-shadow:0 15px 30px #1b376315}
+.highlight-icon{display:grid;place-items:center;width:43px;height:43px;border-radius:13px;font-size:20px;font-weight:850}
+.icon-video{color:#1d66d4;background:linear-gradient(135deg,#e3efff,#eef3ff)}
+.icon-team{color:#078c83;background:linear-gradient(135deg,#dffaf4,#e9f8ff)}
+.icon-track{color:#5c5bd4;background:linear-gradient(135deg,#eceaff,#f3f0ff)}
+.highlight-number{display:block;margin-top:20px;color:#8b9ab4;font-size:9px;font-weight:850;letter-spacing:1.3px}
+.highlight-card h3{margin:8px 0 9px;color:#1a2e55;font-size:16px;letter-spacing:-.3px}
+.highlight-card p{min-height:60px;margin:0;color:#65738d;font-size:12px;line-height:1.8}
+.highlight-line{height:3px;margin-top:18px;border-radius:3px;background:#e8edf7;overflow:hidden}
+.highlight-line span{display:block;width:34%;height:100%;border-radius:3px;background:linear-gradient(90deg,#29c9b1,#5274e9)}
+.highlight-card:nth-child(2) .highlight-line span{width:58%}
+.highlight-card:nth-child(3) .highlight-line span{width:82%}
+.home-trust-strip{display:flex;align-items:center;gap:12px;margin-top:15px;padding:15px 18px;border:1px solid #dcebe9;border-radius:13px;background:linear-gradient(100deg,#f0fbf8,#f7faff)}
+.trust-mark{display:grid;place-items:center;flex:none;width:30px;height:30px;border-radius:50%;background:#d5f7ef;color:#078b7b;font-weight:900}
+.home-trust-strip strong,.home-trust-strip small{display:block}
+.home-trust-strip strong{color:#1d3d58;font-size:12px}
+.home-trust-strip small{margin-top:3px;color:#637890;font-size:10px;line-height:1.6}
+.trust-label{margin-left:auto;flex:none;padding:7px 9px;border:1px solid #cfe6e4;border-radius:7px;color:#188d84;font-size:8px;font-weight:850;letter-spacing:1px}
+@media(max-width:850px){.highlight-grid{grid-template-columns:1fr 1fr}.highlight-card:last-child{grid-column:span 2}.highlights-heading{align-items:start;flex-direction:column;gap:9px}}
+@media(max-width:520px){.home-highlights{margin:24px 0}.highlights-heading h2{font-size:24px!important}.highlight-grid{grid-template-columns:1fr;gap:11px}.highlight-card:last-child{grid-column:auto}.highlight-card{padding:19px}.highlight-card p{min-height:0}.highlight-number{margin-top:15px}.home-trust-strip{align-items:flex-start;padding:13px}.trust-label{display:none}}
+
+
+/* Login and dashboard polish — CSS only; account logic and stored data unchanged */
+#auth{gap:22px;align-items:stretch;margin-top:22px}
+#auth>.card{padding:28px 26px;border-radius:20px;border-color:#4a3b20;background:linear-gradient(155deg,#1b1a16 0%,#121212 78%);box-shadow:0 18px 42px #0006}
+#auth>.card:first-child{background:radial-gradient(ellipse at 100% 0%,#3a2c12 0,transparent 42%),linear-gradient(155deg,#1b1a16,#111)}
+#auth>.card h2{font-size:21px;letter-spacing:.15px;color:#f0d68a;padding-bottom:15px;margin-bottom:19px;border-bottom:1px solid #514126}
+#auth>.card h2:before{width:5px;height:25px;border-radius:6px}
+#auth>.card input{min-height:48px;margin:8px 0;background:#0b0b0b;border-color:#4c412d}
+#auth>.card input:focus{border-color:#d6b65f;box-shadow:0 0 0 4px #d6b65f1c}
+#auth>.card>button:first-of-type{min-height:48px;margin-top:12px;font-size:14px}
+#auth>.card p[id$="Msg"]{min-height:8px;overflow-wrap:anywhere}
+#auth>.card hr{border-top-color:#403722!important}
+#auth>.card h3{font-size:14px;letter-spacing:.2px;margin:18px 0 8px;color:#e6c879!important}
+#auth>.card .muted{font-size:12px}
+#auth>.card input[type="file"]{padding:9px;font-size:12px}
+#dashboard{animation:advoraEnter .35s ease-out both}
+#dashboard>.card:first-child{padding:26px 28px;border-radius:19px;background:radial-gradient(ellipse at 100% 0%,#3a2b12 0,transparent 45%),linear-gradient(120deg,#1b1a16,#111);box-shadow:0 18px 38px #0005}
+#dashboard>.card:first-child h2{font-size:clamp(21px,3vw,28px);letter-spacing:-.45px;color:#f0d68a;margin-bottom:6px!important}
+#dashboard>.card:first-child h2 span{color:#fff2c6}
+#dashboard>.card:first-child .muted{font-size:13px}
+#dashboard>.card:first-child button{width:auto;min-width:105px;padding:10px 17px}
+#dashboard>.grid{margin:20px 0 23px;gap:15px}
+#dashboard>.grid .stat{min-height:112px;display:flex;flex-direction:column;justify-content:center;border-radius:16px;box-shadow:inset 0 1px #ffffff06,0 9px 22px #0003}
+#dashboard>.grid .stat strong{font-variant-numeric:tabular-nums}
+#dashboard>.card{scroll-margin-top:18px}
+#dashboard>.card h2{font-size:19px}
+#dashboard .stat p{margin:8px 0;font-size:12px}
+#dashboard .linkbox{line-height:1.8}
+#dashboard #videoBtn{min-height:49px}
+#dashboard .referral-tree{box-shadow:inset 0 1px #ffffff05}
+@keyframes advoraEnter{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:680px){
+  #auth{gap:15px;margin-top:16px}
+  #auth>.card{padding:21px 18px}
+  #auth>.card h2{font-size:19px}
+  #dashboard>.card:first-child{padding:21px 18px}
+  #dashboard>.grid{gap:10px;margin:15px 0 18px}
+  #dashboard>.grid .stat{min-height:100px}
+}
+@media(prefers-reduced-motion:reduce){#dashboard{animation:none}}
+
+
+/* Dashboard redesign v2 — cohesive navy/teal product UI; CSS only */
+#dashboard{
+  display:block;position:relative;padding-top:4px;
+}
+#dashboard:before{
+  content:"";position:absolute;z-index:0;top:0;left:0;right:0;height:290px;
+  background:radial-gradient(ellipse at 80% 5%,#3152a94a,transparent 42%),linear-gradient(120deg,#0b1733,#142d5a 68%,#1b3a70);
+  border-radius:24px;pointer-events:none
+}
+#dashboard>*{position:relative;z-index:1}
+#dashboard>.card:first-child{
+  min-height:142px;padding:30px 32px!important;margin-top:8px;
+  display:flex;align-items:center;
+  background:linear-gradient(115deg,#0c1937 0%,#172e5c 62%,#244487 100%)!important;
+  border:1px solid #ffffff20!important;border-bottom:3px solid #2ed2ba!important;
+  border-radius:22px!important;box-shadow:0 18px 42px #09152f40!important;
+  color:#fff;overflow:hidden
+}
+#dashboard>.card:first-child:after{
+  content:"";position:absolute;right:9%;top:-95px;width:245px;height:245px;border:1px solid #ffffff20;border-radius:50%;
+  box-shadow:0 0 0 25px #ffffff08,0 0 0 50px #ffffff05;pointer-events:none
+}
+#dashboard>.card:first-child>div{width:100%;position:relative;z-index:1}
+#dashboard>.card:first-child h2{
+  display:block!important;border:0!important;padding:0!important;margin:0 0 8px!important;
+  color:#fff!important;font-size:clamp(25px,3vw,34px)!important;letter-spacing:-.8px!important
+}
+#dashboard>.card:first-child h2:before{display:none!important}
+#dashboard>.card:first-child h2 span{color:#62e1cf!important}
+#dashboard>.card:first-child .muted{color:#c1d2f2!important;font-size:13px!important}
+#dashboard>.card:first-child button{
+  position:relative;z-index:2;width:auto;min-width:112px;padding:11px 18px!important;
+  background:linear-gradient(135deg,#e45b64,#bd3449)!important;border:1px solid #ff9ca5!important;
+  border-radius:10px;color:white!important;box-shadow:0 7px 18px #0003!important
+}
+#dashboard>.grid{
+  margin:20px 0 24px!important;gap:14px!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))
+}
+#dashboard>.grid .stat{
+  min-height:136px;display:flex;flex-direction:column;justify-content:center;gap:5px;
+  padding:22px 19px!important;border:1px solid #2c4268!important;border-radius:17px!important;
+  background:linear-gradient(150deg,#172744,#101a2e)!important;
+  box-shadow:0 12px 28px #0003,inset 0 1px #ffffff08!important
+}
+#dashboard>.grid .stat:after{width:100px;height:100px;right:-42px;top:-42px;background:#36d5bd12}
+#dashboard>.grid .stat small{color:#a9bbd9!important;font-size:10px!important;letter-spacing:1px!important}
+#dashboard>.grid .stat strong{font-size:clamp(24px,2.6vw,32px)!important;color:#66e1d0!important;letter-spacing:-.8px!important}
+#dashboard>.card:not(:first-child){
+  padding:25px 27px!important;margin-bottom:18px!important;
+  border:1px solid #263751!important;border-radius:18px!important;
+  background:linear-gradient(145deg,#151f31,#101722)!important;
+  box-shadow:0 12px 28px #0003!important
+}
+#dashboard>.card:not(:first-child) h2{
+  display:flex;align-items:center;gap:11px;margin:0 0 13px!important;padding:0 0 14px!important;
+  border-bottom:1px solid #2b3b53!important;color:#e9f0ff!important;
+  font-size:19px!important;letter-spacing:-.2px!important
+}
+#dashboard>.card:not(:first-child) h2:before{
+  display:inline-block!important;width:5px!important;height:24px!important;border-radius:5px!important;
+  background:linear-gradient(#35d8c0,#5376ec)!important
+}
+#dashboard>.card p{color:#bdc9dc}
+#dashboard>.card .muted{color:#9eacc3!important}
+#dashboard>.card .stat{
+  background:linear-gradient(145deg,#1a2a43,#121e30)!important;border-color:#304765!important
+}
+#dashboard>.card .stat small{color:#a9bddb!important}
+#dashboard>.card .stat strong{color:#66e1d0!important}
+#dashboard>.card input,#dashboard>.card select,#dashboard>.card textarea{
+  background:#0c1422!important;border-color:#34435a!important;color:#f3f7ff!important
+}
+#dashboard>.card input:focus,#dashboard>.card select:focus,#dashboard>.card textarea:focus{
+  border-color:#3fd7c2!important;box-shadow:0 0 0 3px #35d8c01f!important
+}
+#dashboard>.card .linkbox{
+  padding:16px 18px!important;background:#0c1627!important;border:1px dashed #3e7890!important;
+  border-radius:12px!important;color:#7de6d7!important
+}
+#dashboard>.card button{
+  box-shadow:0 6px 16px #0003!important;border-radius:10px!important
+}
+#dashboard>.card button.secondary{
+  background:linear-gradient(135deg,#1aa997,#087c83)!important;border-color:#38d5c0!important;color:#fff!important
+}
+#dashboard>.card button:not(.secondary):not(.danger){
+  background:linear-gradient(135deg,#3c70e8,#394fba)!important;border-color:#698af0!important;color:#fff!important
+}
+#dashboard>.card .tablewrap{border-color:#2d3e56!important;border-radius:13px!important}
+#dashboard>.card table{background:#101927!important;color:#e5edf9!important}
+#dashboard>.card th{background:#1c2b42!important;color:#9fe9df!important;border-bottom-color:#354760!important}
+#dashboard>.card td{border-bottom-color:#27374d!important;color:#d4deed}
+#dashboard>.card tbody tr:hover{background:#1a2a40!important}
+#dashboard .referral-tree{background:linear-gradient(145deg,#101a2a,#0c1421)!important;border-color:#30445f!important}
+#dashboard .tree-root{background:linear-gradient(135deg,#1d4e61,#172d50)!important;border-color:#43d6c1!important;color:#d5fff7!important}
+#dashboard .tree-team{background:#111d2d!important;border-color:#30445f!important}
+#dashboard .tree-team-title,#dashboard .tree-node-name{color:#6ce2d2!important}
+#dashboard .tree-node{background:#19263a!important;border-color:#344a67!important;color:#edf4ff!important}
+#dashboard .tree-node-meta{color:#a5b5cc!important}
+#dashboard .tree-children{border-left-color:#397b86!important}
+#dashboard .tree-empty{border-color:#3b506a!important;color:#aabbd1!important}
+#dashboard .notice{background:#302713!important;border-color:#80652c!important;color:#f1dca4!important}
+@media(max-width:760px){
+  #dashboard>.grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #dashboard>.card:first-child{padding:24px 21px!important;min-height:125px}
+  #dashboard>.card:not(:first-child){padding:20px 18px!important}
+}
+@media(max-width:420px){
+  #dashboard>.grid .stat{padding:16px 13px!important;min-height:112px}
+  #dashboard>.grid .stat small{font-size:9px!important;letter-spacing:.55px!important}
+  #dashboard>.grid .stat strong{font-size:23px!important}
+}
+
+
+
+
+/* AdVora full visual refresh — navy blue + teal green */
+body{font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.55;letter-spacing:.05px}
+.site-header{position:sticky;top:0;z-index:20;background:rgba(8,20,42,.94)!important;backdrop-filter:blur(14px);border-bottom:1px solid #2b4966!important;box-shadow:0 8px 28px #02091455}
+.header-inner{max-width:1160px;min-height:76px;gap:18px}
+.brand-lockup{gap:12px}
+.brand-mark{background:linear-gradient(145deg,#26d6bd,#087e8b)!important;box-shadow:0 7px 22px #20c7b044;border-radius:14px!important}
+.site-header a,.site-header .header-pill{color:#dcecff}
+.header-pill{border:1px solid #2c4b68!important;background:#102641!important;border-radius:999px!important;padding:9px 14px!important}
+.container{max-width:1160px!important}
+.home-hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:26px;align-items:center;margin:28px auto 24px!important;padding:clamp(24px,4vw,48px)!important;position:relative;overflow:hidden;border:1px solid #31516c!important;border-radius:28px!important;background:radial-gradient(ellipse at 90% 10%,#20c7b02c,transparent 35%),linear-gradient(125deg,#0b1733 0%,#142d5a 62%,#0f5960 120%)!important;box-shadow:0 24px 55px #02091470!important;color:#f4f8ff!important}
+.home-hero:after{content:"";position:absolute;width:330px;height:330px;right:-150px;bottom:-205px;border:1px solid #4be0ce55;border-radius:50%;box-shadow:0 0 0 28px #4be0ce0b,0 0 0 58px #4be0ce08;pointer-events:none}
+.hero-copy,.hero-art{position:relative;z-index:1}
+.hero-copy h1,.home-hero h1{font-size:clamp(34px,5vw,58px)!important;line-height:1.07!important;letter-spacing:-1.8px!important;color:#fff!important;margin:0 0 18px!important;max-width:700px}
+.hero-copy p,.home-hero p{font-size:clamp(15px,1.6vw,18px)!important;line-height:1.8;color:#c8d8f0!important;max-width:650px}
+.home-hero .hero-art{border:1px solid #ffffff24;border-radius:24px;background:linear-gradient(145deg,#ffffff12,#ffffff04);padding:22px;box-shadow:inset 0 1px #ffffff15}
+.home-hero button,.hero-copy button{min-height:46px;padding:12px 20px!important;border-radius:12px!important}
+.home-highlights{max-width:1160px;margin:22px auto 26px!important;padding:10px 0 20px!important;color:#eaf2ff!important}
+.home-highlights h2,.home-highlights h3{color:#eff7ff!important}
+.highlight-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px!important}
+.home-highlights .highlight-card{position:relative;overflow:hidden;padding:23px!important;border:1px solid #2c4967!important;border-radius:18px!important;background:linear-gradient(145deg,#172944,#101a2c)!important;color:#dce8f9!important;box-shadow:0 12px 30px #02091445!important;transition:transform .2s,border-color .2s}
+.home-highlights .highlight-card:before{content:"";position:absolute;left:0;top:0;width:100%;height:3px;background:linear-gradient(90deg,#20c7b0,#4169e1)}
+.home-highlights .highlight-card:hover{transform:translateY(-3px);border-color:#3d8b91!important}
+.home-highlights .highlight-card p,.home-highlights .highlight-card .muted{color:#aebfd8!important}
+.home-trust-strip{max-width:1160px;margin:20px auto 30px!important;padding:18px 22px!important;border:1px solid #2a696d!important;border-radius:16px!important;background:linear-gradient(100deg,#103c46,#13294a)!important;color:#d9fff7!important}
+#auth{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px!important;margin:26px auto 34px}
+#auth>.card{padding:clamp(22px,3vw,32px)!important;border-radius:22px!important;min-width:0}
+#auth>.card h2{font-size:23px!important}
+#auth button{width:100%;min-height:45px;font-weight:700;letter-spacing:.15px}
+.card{transition:border-color .2s,box-shadow .2s}
+#dashboard{position:relative;isolation:isolate;padding-top:14px}
+#dashboard>.grid .stat{position:relative;overflow:hidden}
+#dashboard>.grid .stat:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(#20c7b0,#4169e1)}
+#dashboard>.card:not(:first-child){position:relative;overflow:hidden}
+#dashboard>.card:not(:first-child) h2{font-size:20px!important}
+#dashboard>.card:not(:first-child) h2:before{flex:0 0 5px}
+#dashboard .tablewrap{overflow-x:auto}
+#dashboard table{min-width:520px;border-collapse:separate;border-spacing:0}
+#dashboard th{font-size:11px;text-transform:uppercase;letter-spacing:.7px;padding:13px 14px}
+#dashboard td{padding:13px 14px}
+#dashboard input,#dashboard select,#dashboard textarea{min-height:43px}
+#dashboard button{font-weight:650;transition:filter .18s,transform .18s}
+#dashboard button:hover,.home-hero button:hover{filter:brightness(1.08);transform:translateY(-1px)}
+footer{max-width:1160px;margin:34px auto 0;padding:22px 14px!important;color:#8fa7c6!important}
+@media(max-width:760px){
+ .site-header{position:relative}
+ .header-inner{min-height:unset;flex-wrap:wrap;padding:13px 0}
+ .home-hero{grid-template-columns:1fr;gap:18px;margin:16px auto 18px!important;border-radius:22px!important}
+ .home-hero .hero-art{padding:16px}
+ .highlight-grid{grid-template-columns:1fr}
+ #auth{grid-template-columns:1fr;margin-top:18px}
+ .home-highlights{padding:8px 14px 16px!important}
+ .home-trust-strip{margin:16px 14px 24px!important}
+}
+@media(min-width:761px) and (max-width:980px){
+ .highlight-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #dashboard>.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* AdVora unified premium theme v3 — visual-only overrides; preserve all app logic/data */
+:root{
+  --navy:#0b1733;--navy2:#142d5a;--blue:#4169e1;--teal:#20c7b0;
+  --ink:#eaf0fc;--muted:#aab8d0;--line:#2c405d;--surface:#121e31;
+  --page:#091326;--shadow:0 16px 38px rgba(0,0,0,.22);
+}
+html{background:#091326}
+body{
+  background:radial-gradient(ellipse at 8% 0%,#1b3158 0,transparent 34%),linear-gradient(180deg,#0a1428 0%,#0d192e 58%,#091326 100%);
+  color:#eaf0fc;
+}
+header:not(.site-header){background:linear-gradient(120deg,#09152f,#172f60 65%,#244487);border-bottom:3px solid #20c7b0}
+.container{max-width:1120px}
+.card{
+  background:linear-gradient(145deg,#152238,#101a2b);
+  border:1px solid #2a3d59;color:#eaf0fc;
+  box-shadow:0 14px 34px rgba(0,0,0,.2);border-radius:18px
+}
+.card h2{color:#edf4ff;border-bottom-color:#2a3b54}
+.card h2:before{background:linear-gradient(#20c7b0,#5578ed)}
+.muted{color:#aab8d0}
+.notice{background:#2c281b;border-color:#766333;color:#f1dfb1}
+input,select,textarea{
+  background:#0b1526;color:#edf4ff;border-color:#344762;border-radius:11px
+}
+input::placeholder,textarea::placeholder{color:#8393ad}
+input:focus,select:focus,textarea:focus{background:#0e1b30;border-color:#20c7b0;box-shadow:0 0 0 3px #20c7b01c}
+button{
+  background:linear-gradient(135deg,#4169e1,#304bb3);border-color:#6988ed;color:#fff;
+  box-shadow:0 7px 17px #0003;border-radius:11px
+}
+button.secondary{background:linear-gradient(135deg,#20bda9,#087d83);border-color:#42d9c4;color:#fff}
+button.danger{background:linear-gradient(135deg,#df5868,#ad3046);border-color:#f18b9a;color:#fff}
+button:disabled{background:#35445a;color:#8f9db3;border-color:#3c4c63}
+.grid{gap:15px}
+.stat{
+  background:linear-gradient(145deg,#1a2b46,#111d31);border-color:#304765;color:#edf4ff;
+  border-radius:16px;box-shadow:0 9px 23px #0002
+}
+.stat small{color:#aabbd6}
+.stat strong{color:#61dfcd}
+.linkbox{background:#0c182a;border-color:#3d7d8d;color:#81e8d9}
+.tablewrap{border-color:#2b3e58;border-radius:13px}
+table{background:#101a2b;color:#e5edf9}
+th{background:#1b2a41;color:#9ce8dc}
+th,td{border-bottom-color:#2a3a52}
+tbody tr:hover{background:#1b2b43}
+.success{color:#65dfb4}.error{color:#ff9a9f}
+footer{color:#91a2bd;border-top-color:#263852}
+#auth{gap:22px;align-items:stretch}
+#auth>.card{
+  background:radial-gradient(ellipse at 100% 0%,#1b3b5a 0,transparent 42%),linear-gradient(150deg,#15243a,#101a2b);
+  border-color:#2e4563;box-shadow:0 18px 42px #0003
+}
+#auth>.card:first-child{background:radial-gradient(ellipse at 100% 0%,#164c51 0,transparent 43%),linear-gradient(150deg,#15283e,#101a2b)}
+#auth>.card h2{color:#f0f6ff;border-bottom-color:#30445f}
+#auth>.card h2:before{background:linear-gradient(#20c7b0,#5578ed)}
+#auth>.card input{background:#0a1526;border-color:#354a65;color:#f3f7ff}
+#auth>.card input:focus{border-color:#20c7b0;box-shadow:0 0 0 4px #20c7b01c}
+#auth>.card h3{color:#6fe3d4!important}
+#auth>.card hr{border-color:#30445f!important}
+#auth>.card .muted{color:#aab8d0}
+#dashboard:before{background:radial-gradient(ellipse at 80% 5%,#3152a94a,transparent 42%),linear-gradient(120deg,#0b1733,#142d5a 68%,#1b3a70)}
+#dashboard>.card:first-child{border-bottom-color:#20c7b0!important}
+#dashboard>.card:not(:first-child){background:linear-gradient(145deg,#152238,#101a2b)!important;border-color:#2a3d59!important}
+#dashboard>.card:not(:first-child) h2{color:#edf4ff!important;border-bottom-color:#2a3b54!important}
+#dashboard>.card:not(:first-child) h2:before{background:linear-gradient(#20c7b0,#5578ed)!important}
+#dashboard>.card .stat{background:linear-gradient(145deg,#1a2b46,#111d31)!important;border-color:#304765!important}
+#dashboard>.card .tablewrap{border-color:#2b3e58!important}
+#dashboard>.card table{background:#101a2b!important;color:#e5edf9!important}
+#dashboard>.card th{background:#1b2a41!important;color:#9ce8dc!important}
+#dashboard>.card td{border-bottom-color:#2a3a52!important;color:#d7e2f3!important}
+#dashboard>.card tbody tr:hover{background:#1b2b43!important}
+#dashboard .referral-tree{background:linear-gradient(145deg,#101c30,#0c1525)!important;border-color:#30445f!important}
+#dashboard .tree-root{background:linear-gradient(135deg,#17675f,#18396c)!important;border-color:#43d6c1!important;color:#e2fffa!important}
+#dashboard .tree-team{background:transparent!important}
+#dashboard .tree-team-title,#dashboard .tree-node-name{color:#6ce2d2!important}
+#dashboard .tree-node-card{background:#19283e!important;border-color:#344a67!important;box-shadow:0 5px 15px #0003}
+#dashboard .tree-node-meta{color:#a5b5cc!important}
+#dashboard .tree-children>.tree-node:before,#dashboard .tree-children:before,#dashboard .tree-root-wrap:after,#dashboard .tree-children>.tree-node>.tree-node-card:before{border-color:#397b86!important}
+#dashboard .tree-empty{background:#111e31;border-color:#3b506a!important;color:#aabbd1!important}
+.home-highlights{color:#172d59}
+.home-highlights .highlight-card{background:linear-gradient(155deg,#fff,#f4f8ff);border-color:#dce6f4}
+.home-trust-strip{background:linear-gradient(100deg,#eafaf7,#f4f8ff);border-color:#d5e9e7}
+#dashboard .notice{background:#2c281b!important;border-color:#766333!important;color:#f1dfb1!important}
+@media(max-width:760px){
+  .container{padding-left:14px;padding-right:14px}
+  #dashboard>.grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #auth{grid-template-columns:1fr;gap:15px}
+}
+@media(max-width:520px){
+  header:not(.site-header){padding:24px 18px}
+  .card{padding:18px}
+  .home-hero{margin-top:4px}
+  .header-pill{white-space:nowrap}
+  #dashboard>.card:not(:first-child){padding:19px 15px!important}
+  #dashboard>.grid .stat{min-width:0}
+  .tablewrap{max-width:100%}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+
+/* AdVora Black & Gold luxury theme — visual-only refresh; demo logic preserved */
+:root{--navy:#080808;--navy2:#151515;--blue:#d4af37;--teal:#b99428;--ink:#f6f0df;--muted:#b8ae95;--line:#3b3320;--surface:#151515;--page:#090909;--shadow:0 14px 38px rgba(0,0,0,.38);--gold:#d4af37;--gold-light:#f4df91}
+html{scroll-behavior:smooth;color-scheme:dark}
+body{background:radial-gradient(ellipse at 10% 0%,#30250c 0,transparent 34%),#090909!important;color:#f6f0df!important;line-height:1.6}
+header{text-align:left!important;padding:30px max(22px,calc((100% - 1080px)/2))!important;background:linear-gradient(120deg,#050505 0%,#17130a 58%,#33270c 100%)!important;color:#f4df91!important;border-bottom:3px solid #d4af37!important;box-shadow:0 10px 30px rgba(0,0,0,.45)!important}
+header h1{color:#f4df91!important;letter-spacing:1.5px}header p{color:#d8c78f!important}
+header:after{border-color:#d4af3730!important;box-shadow:0 0 0 28px #d4af3710,0 0 0 58px #d4af3708!important}
+.container{max-width:1120px!important}
+.card{background:linear-gradient(145deg,#181818,#101010)!important;color:#f6f0df!important;border:1px solid #4a3c19!important;border-radius:16px!important;box-shadow:0 12px 32px rgba(0,0,0,.32)!important}
+h2,h3{color:#f0d77b!important}p,li,label,td,th,small{color:inherit}
+input,select,textarea{background:#0d0d0d!important;color:#f8f1df!important;border:1px solid #66521e!important;border-radius:9px!important}
+input::placeholder,textarea::placeholder{color:#91866c!important}
+button{background:linear-gradient(135deg,#f2d879,#b58a19)!important;color:#171207!important;border:1px solid #f4df91!important;border-radius:9px!important;font-weight:800!important;box-shadow:0 5px 14px #0005!important}
+button.secondary{background:linear-gradient(135deg,#d4af37,#9a7413)!important;color:#151006!important}
+button.danger{background:#7c2626!important;color:#fff!important;border-color:#a94444!important}
+button:disabled{background:#49443a!important;color:#a69d88!important;border-color:#49443a!important}
+.stat{background:linear-gradient(145deg,#211b0d,#121212)!important;border:1px solid #6d551d!important;border-radius:14px!important;color:#f8e8ac!important}
+.stat small{color:#c5b98e!important}.stat strong{color:#f4d66f!important}
+.muted{color:#b8ae95!important}
+.notice{background:#241d0c!important;border:1px solid #a8892f!important;color:#f4df91!important;border-radius:10px!important}
+.success{color:#75d6a2!important}.error{color:#ff9292!important}
+.linkbox{background:#0c0c0c!important;border:1px dashed #c5a12c!important;color:#f4df91!important}
+table{color:#f6f0df!important}th{background:#29200b!important;color:#f4df91!important}td,th{border-bottom:1px solid #3b3320!important}tr:hover td{background:#d4af370c!important}
+footer{color:#9c9278!important}a{color:#f0d77b}
+.tree-root{background:#211a08!important;border:1px solid #d4af37!important;color:#f4df91!important}
+.tree-team,.tree-node-card{background:#151515!important;border-color:#6d551d!important;color:#f6f0df!important}
+.tree-team-title,.tree-node-name{color:#f4df91!important}.tree-node-meta,.tree-empty{color:#b8ae95!important}
+@media(max-width:640px){header{padding:24px 18px!important}header h1{font-size:28px!important}.card{padding:16px!important}}
+
+</style>
+</head>
+
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand-lockup">
+      <span class="brand-mark">A</span>
+      <div><h1>AdVora</h1><p>WATCH <span>•</span> EARN <span>•</span> GROW</p></div>
+    </div>
+    <div class="header-pill"><span class="status-dot"></span> DEMO EXPERIENCE</div>
+  </div>
+</header>
+
+<div class="container">
+<section id="homeHero" class="home-hero">
+  <div class="hero-copy">
+    <div class="eyebrow"><span class="eyebrow-line"></span> YOUR REWARDS JOURNEY STARTS HERE</div>
+    <h2>Turn your time into<br><span>new possibilities.</span></h2>
+    <p class="hero-description">Explore video rewards, grow your referral community, and track your progress — all in one simple dashboard.</p>
+    <div class="hero-actions">
+      <a href="#auth" class="hero-primary">Get Started <span aria-hidden="true">↗</span></a>
+      <span class="hero-secondary"><span class="hero-check">✓</span> Simple. Clear. Connected.</span>
+    </div>
+    <div class="hero-features">
+      <div><span class="feature-icon">▶</span><span><b>Video Rewards</b><small>Daily demo activities</small></span></div>
+      <div><span class="feature-icon">◎</span><span><b>Referral Network</b><small>Explore your team</small></span></div>
+      <div><span class="feature-icon">↗</span><span><b>Track Progress</b><small>One clear dashboard</small></span></div>
+    </div>
+  </div>
+  <div class="hero-art" aria-label="AdVora dashboard preview">
+    <div class="art-glow"></div>
+    <div class="preview-window">
+      <div class="preview-top"><div class="preview-dots"><i></i><i></i><i></i></div><span>ADVORA OVERVIEW</span><span class="preview-live">DEMO</span></div>
+      <div class="preview-welcome"><small>YOUR SPACE</small><strong>Welcome to AdVora</strong><span>Your rewards journey, organized.</span></div>
+      <div class="preview-balance"><div><small>DEMO BALANCE</small><strong>$0.00</strong></div><span class="balance-symbol">↗</span></div>
+      <div class="preview-bars"><div><span>Video rewards</span><b>Daily activity</b><i><em style="width:72%"></em></i></div><div><span>Referral network</span><b>Team growth</b><i><em style="width:54%"></em></i></div></div>
+      <div class="preview-foot"><span class="preview-avatar">A</span><span><b>Made for your journey</b><small>Rewards • Community • Progress</small></span><span class="preview-arrow">↗</span></div>
+    </div>
+    <div class="floating-chip chip-top"><span>✦</span> Your progress, at a glance</div>
+    <div class="floating-chip chip-bottom"><span class="chip-dot"></span> One connected experience</div>
+  </div>
+</section>
+
+<section id="homeHighlights" class="home-highlights">
+  <div class="highlights-heading">
+    <div><span class="section-kicker">A CLEARER WAY TO EXPLORE</span><h2>Everything you need, <span>in one place.</span></h2></div>
+    <p>Designed to make your demo experience simple, organized, and easy to follow.</p>
+  </div>
+  <div class="highlight-grid">
+    <article class="highlight-card">
+      <div class="highlight-icon icon-video">▶</div><span class="highlight-number">01 / WATCH</span>
+      <h3>Daily Video Activities</h3><p>Explore available demo video activities and keep track of your daily progress.</p>
+      <div class="highlight-line"><span></span></div>
+    </article>
+    <article class="highlight-card">
+      <div class="highlight-icon icon-team">◎</div><span class="highlight-number">02 / CONNECT</span>
+      <h3>Your Referral Community</h3><p>View your referral team and follow your community activity in one organized space.</p>
+      <div class="highlight-line"><span></span></div>
+    </article>
+    <article class="highlight-card">
+      <div class="highlight-icon icon-track">↗</div><span class="highlight-number">03 / TRACK</span>
+      <h3>Progress at a Glance</h3><p>Review demo balances, package details, and activity history from your dashboard.</p>
+      <div class="highlight-line"><span></span></div>
+    </article>
+  </div>
+  <div class="home-trust-strip"><span class="trust-mark">✓</span><div><strong>Clear by design. Easy to navigate.</strong><small>AdVora is currently a demo experience. No real deposits or payouts are processed.</small></div><span class="trust-label">DEMO PLATFORM</span></div>
+</section>
+
+<div class="notice">
+  <b>Demo Mode:</b> This is a demo testing website. No real money is deposited or paid.
+  Accounts are stored in this browser only. A server and database are required for real users to share data.
+</div>
+
+<section id="auth">
+  <div class="card">
+    <h2>Create Demo Account</h2>
+    <input id="regName" placeholder="Choose username">
+    <input id="regPass" type="password" placeholder="Choose password">
+    <input id="regRef" placeholder="Referral username (optional)">
+    <button onclick="register()">Register Demo Account</button>
+    <p id="regMsg"></p>
+  </div>
+
+  <div class="card">
+    <h2>Login</h2>
+    <input id="loginName" placeholder="Username">
+    <input id="loginPass" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p id="loginMsg"></p>
+    <hr style="border:0;border-top:1px solid #403725;margin:18px 0">
+    <h3 style="color:#e2c16f">Transfer Existing Demo Accounts</h3>
+    <p class="muted">Your old local-file accounts do not automatically appear on the online website. Export from the old version, then import the JSON backup here. Keep the backup private because it contains demo passwords and balances.</p>
+    <button class="secondary" type="button" onclick="exportDemoData()">Export Demo Data Backup</button>
+    <input id="importDemoFile" type="file" accept=".json,application/json">
+    <button type="button" onclick="importDemoData()">Import Demo Data Backup</button>
+    <button type="button" class="secondary" onclick="restoreLocalBackup()">Restore Previous Local Backup</button>
+    <p class="muted">The restore option uses the last valid local snapshot saved before a database change. It is available only in this browser.</p>
+    <p id="transferMsg" class="muted"></p>
+  </div>
+
+  <div class="card" id="cloudAuthCard">
+    <h2>Shared Cloud Account</h2>
+    <p class="muted">New accounts created here use AdVora's shared database. This is separate from your existing browser-only demo accounts.</p>
+    <input id="cloudUsername" autocomplete="username" placeholder="Choose username (3–24 characters)">
+    <input id="cloudEmail" type="email" autocomplete="email" placeholder="Email address">
+    <input id="cloudPassword" type="password" autocomplete="new-password" placeholder="Password (minimum 8 characters)">
+    <input id="cloudReferral" placeholder="Referral code (optional)">
+    <button onclick="cloudSignUp()">Create Shared Account</button>
+    <hr style="border:0;border-top:1px solid #403725;margin:15px 0">
+    <h3>Already have a shared account?</h3>
+    <input id="cloudLoginEmail" type="email" autocomplete="username" placeholder="Email address">
+    <input id="cloudLoginPassword" type="password" autocomplete="current-password" placeholder="Password">
+    <button class="secondary" onclick="cloudSignIn()">Login to Shared Account</button>
+    <p id="cloudAuthMsg" aria-live="polite"></p>
+    <p class="muted">Existing local demo accounts are not changed or deleted. Real USDT deposits and withdrawals remain disabled.</p>
+  </div></section>
+
+
+<section id="cloudDashboard" class="hidden">
+  <div class="card">
+    <h2>Shared AdVora Dashboard</h2>
+    <p id="cloudWelcome" class="muted">Your account is connected to the shared database.</p>
+    <p><b>Referral code:</b> <span id="cloudReferralCode">—</span></p>
+    <button class="secondary" onclick="cloudRefresh()">Refresh Cloud Data</button>
+    <button class="danger" onclick="cloudSignOut()">Logout Shared Account</button>
+    <p id="cloudDashMsg" aria-live="polite"></p>
+  </div>
+  <div class="grid">
+    <div class="stat"><small>Package Balance (Demo)</small><strong id="cloudPackageBal">$0.00</strong></div>
+    <div class="stat"><small>Referral Balance (Demo)</small><strong id="cloudReferralBal">$0.00</strong></div>
+    <div class="stat"><small>Active Demo Package</small><strong id="cloudActivePackage">None</strong></div>
+    <div class="stat"><small>Videos Claimed Today</small><strong id="cloudVideoCount">0</strong></div>
+  </div>
+  <div class="card">
+    <h2>Shared Demo Packages</h2>
+    <p class="muted">No payment is taken. These buttons activate a demo package only.</p>
+    <div class="grid">
+      <div class="stat"><small>Starter</small><strong>$10</strong><p class="muted">3 videos per day</p><button onclick="cloudActivatePackage(10)">Activate Demo</button></div>
+      <div class="stat"><small>Basic</small><strong>$30</strong><p class="muted">6 videos per day</p><button onclick="cloudActivatePackage(30)">Activate Demo</button></div>
+      <div class="stat"><small>Standard</small><strong>$50</strong><p class="muted">10 videos per day</p><button onclick="cloudActivatePackage(50)">Activate Demo</button></div>
+      <div class="stat"><small>Premium</small><strong>$100</strong><p class="muted">15 videos per day</p><button onclick="cloudActivatePackage(100)">Activate Demo</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Daily Video Rewards</h2>
+    <p class="muted">Each demo video claim records a $0.17 reward, within your active package limit. This is simulated demo credit only, not real income.</p>
+    <button onclick="cloudClaimVideo()">Claim Demo Video Reward — $0.17</button>
+  </div>
+  <div class="card">
+    <h2>Shared Referral Team</h2>
+    <p class="muted">Downline members in your referral tree, loaded from the shared database.</p>
+    <div class="tablewrap"><table><thead><tr><th>Username</th><th>Level</th><th>Joined</th><th>Demo Package</th></tr></thead><tbody id="cloudTeamRows"><tr><td colspan="4">Loading team…</td></tr></tbody></table></div>
+  </div>
+  <div class="notice">USDT BEP20 deposits and payouts are not active. Do not send money to this demo site. Wallet payments require further secure server-side payment verification and review.</div>
+</section>
+<section id="dashboard" class="hidden">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+      <div>
+        <h2 style="margin-bottom:5px">Welcome, <span id="welcome"></span></h2>
+        <span class="muted">Your AdVora demo dashboard</span>
+      </div>
+      <button style="width:auto" class="danger" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="stat"><small>Package Balance</small><strong id="packageBal">$0.00</strong></div>
+    <div class="stat"><small>Referral Balance</small><strong id="referralBal">$0.00</strong></div>
+    <div class="stat"><small>Active Demo Package</small><strong id="activePackage">$0</strong></div>
+    <div class="stat"><small>Direct Referrals</small><strong id="directCount">0</strong></div>
+  </div>
+
+  <div class="card">
+    <h2>My Referral Link</h2>
+    <p class="muted">Use this link when registering a new demo account.</p>
+    <div class="linkbox" id="myLink"></div>
+    <button class="secondary" onclick="copyReferral()">Copy Referral Link</button>
+    <p id="copyMsg" class="muted"></p>
+  </div>
+
+  <div class="card">
+    <h2>Packages</h2>
+    <p class="muted">Activating a demo package does not require payment and does not generate real money.</p>
+    <div class="grid">
+      <div class="stat"><small>Starter</small><strong>$10</strong><p class="muted">3 demo videos per day</p><button onclick="buyPackage(10)">Activate Demo</button></div>
+      <div class="stat"><small>Basic</small><strong>$30</strong><p class="muted">6 demo videos per day</p><button onclick="buyPackage(30)">Activate Demo</button></div>
+      <div class="stat"><small>Standard</small><strong>$50</strong><p class="muted">10 demo videos per day</p><button onclick="buyPackage(50)">Activate Demo</button></div>
+      <div class="stat"><small>Premium</small><strong>$100</strong><p class="muted">15 demo videos per day</p><button onclick="buyPackage(100)">Activate Demo</button></div>
+    </div>
+    <p id="packageMsg"></p>
+  </div>
+
+  <div class="card" id="usdtPaymentStatus">
+    <h2>USDT Deposit &amp; Withdrawal</h2>
+    <div class="grid">
+      <div class="stat">
+        <small>Selected Network</small>
+        <strong style="font-size:20px">USDT · BEP20</strong>
+        <p class="muted">BNB Smart Chain</p>
+      </div>
+      <div class="stat">
+        <small>Payment Status</small>
+        <strong style="font-size:20px;color:#e2c16f">Not Active</strong>
+        <p class="muted">Live deposits and payouts are disabled.</p>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:14px">This website is still running in demo mode. Do not send USDT to any address for this demo, and never share a wallet seed phrase or private key.</p>
+    <p class="muted">Before real payments can be enabled, AdVora needs a secure server and database, verified BEP20 transaction monitoring, protected wallet handling, withdrawal approval controls, and end-to-end testing. The current GitHub Pages demo cannot securely process real payments by itself.</p>
+  </div>
+
+  <div class="card">
+    <h2>Daily Video Rewards</h2>
+    <p>Demo reward: <b>$0.17 per video</b>. Daily limits depend on the activated demo package.</p>
+    <p>Videos completed today: <b id="videoCount">0/0</b></p>
+    <button id="videoBtn" onclick="claimVideo()">Claim Demo Video Reward — $0.17</button>
+    <p id="videoMsg"></p>
+    <p class="muted">This button records a demo reward only; it does not verify that a real video was watched or that real income was earned.</p>
+  </div>
+
+  <div class="card" id="chainRepairCard">
+    <h2>Safe Referral List Repair</h2>
+    <p class="muted">This safe repair rebuilds only the Direct Referrals list. It does not change or delete any account’s referrer, balance, video records, or withdrawal history.</p>
+    <button class="secondary" onclick="repairReferralListsSafe()">Repair Referral Lists (Safe)</button>
+    <p id="chainRepairMsg"></p>
+  </div>
+
+  <div class="card">
+    <h2>Demo Referral Link Fix</h2>
+    <p class="muted">If this account is not linked to a referral, enter the referrer’s username here to fix it. Existing balances will not be deleted.</p>
+    <input id="fixRefName" placeholder="Referrer username (e.g. user2)">
+    <button class="secondary" onclick="fixMyReferral()">Fix My Referral</button>
+    <p id="fixRefMsg"></p>
+  </div>
+
+  <div class="card">
+    <h2>Referral Team</h2>
+    <p class="muted">This list shows demo accounts created in this browser.</p>
+    <h3>Direct Referrals</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Username</th><th>Joined</th><th>Package</th></tr></thead>
+        <tbody id="directTeam"></tbody>
+      </table>
+    </div>
+    <h3>Referral Tree</h3>
+    <p class="muted">Every referral level is shown using your existing referral records, including all members under each branch. No referral links, balances, or commission records are changed.</p>
+    <div id="referralTree" class="referral-tree"><div class="tree-empty">Loading referral tree…</div></div>
+    <h3>Referral Levels</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Level</th><th>Bonus Rate</th><th>Users in Level</th></tr></thead>
+        <tbody id="levelTeam"></tbody>
+      </table>
+    </div>
+    <p class="muted">Demo referral rates: Level 1 = 5%, Level 2 = 3%, Level 3 = 2%, Level 4 = 1%, Level 5 = 1%. For each video claim, every existing upline receives the applicable percentage bonus plus a separate $0.01 activity bonus. This is a local demo only.</p>
+  </div>
+
+  <div class="card">
+    <h2>Referral Earnings</h2>
+    <p>Referral Balance: <b id="referralBal2">$0.00</b></p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>From User</th><th>Bonus Type</th><th>Demo Bonus</th><th>Date</th></tr></thead>
+        <tbody id="referralRows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Withdraw Demo Balance</h2>
+    <p>Minimum request: <b>$5.00</b>. Withdrawal fee: <b>10% (Upline 5% + Downline 5%)</b>. You receive <b>90%</b>.</p>
+    <p class="muted">Demo distribution: Each existing upline at Levels 1–5 receives 1%, and one account at each existing downline level (Levels 1–5) receives 1%. Shares for empty levels are not redistributed. No real payment is made.</p>
+    <p class="muted">A withdrawal only saves a demo request in this browser. It is not a real payment.</p>
+    <button class="secondary" onclick="testWithdrawalDistribution()">Safe $5 Distribution Preview (No Data Changed)</button>
+    <div id="distributionTestResult" class="notice hidden" style="margin:10px 0;overflow-wrap:anywhere"></div>
+    <button class="danger" onclick="applySafeCommissionTest()">Apply Safe $5 Commission Test (Demo Only — Once Per Account)</button>
+    <p class="muted">This separate test adds $0.05 to each eligible upline/downline account and records a clearly labelled test entry. It does not deduct your balance or create a withdrawal request. It can be applied only once from each initiating account.</p>
+    <div id="commissionTestResult" class="notice hidden" style="margin:10px 0;overflow-wrap:anywhere"></div>
+    <input id="withdrawAmount" type="number" min="5" step="0.01" placeholder="Amount (minimum $5)">
+    <button onclick="withdraw()">Submit Demo Withdrawal</button>
+    <p id="withdrawMsg"></p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Amount</th><th>Total Fee</th><th>Net</th><th>Upline Share</th><th>Downline Share</th><th>Unassigned Fee</th><th>Status</th></tr></thead>
+        <tbody id="withdrawRows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Activity History</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Date</th><th>Activity</th><th>Amount</th></tr></thead>
+        <tbody id="activityRows"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer>AdVora Demo • No real deposits or payouts</footer>
+</div>
+
+<script>
+const DBKEY = "advora_full_demo_v1";
+const SESSIONKEY = "advora_full_demo_session";
+// Keep login sessions separate per browser tab; the demo user database remains unchanged.
+function getSessionName(){ return sessionStorage.getItem(SESSIONKEY) || ""; }
+function setSessionName(name){ sessionStorage.setItem(SESSIONKEY, name); }
+function clearSessionName(){ sessionStorage.removeItem(SESSIONKEY); }
+const rates = [0.05, 0.03, 0.02, 0.01, 0.01];
+
+function loadDB(){
+  try {
+    return JSON.parse(localStorage.getItem(DBKEY)) || {users:{}};
+  } catch(e) {
+    return {users:{}};
+  }
+}
+const BACKUPKEY = "advora_full_demo_v1_backup";
+function saveDB(db){
+  // Preserve the last valid non-empty local database before replacing it.
+  try {
+    const previousRaw=localStorage.getItem(DBKEY);
+    if(previousRaw){
+      const previous=JSON.parse(previousRaw);
+      if(previous && previous.users && Object.keys(previous.users).length){
+        localStorage.setItem(BACKUPKEY,previousRaw);
+      }
+    }
+  } catch(e) {
+    // Never block a valid save just because an older snapshot cannot be parsed.
+  }
+  localStorage.setItem(DBKEY, JSON.stringify(db));
+}
+function restoreLocalBackup(){
+  const status=document.getElementById("transferMsg");
+  const backupRaw=localStorage.getItem(BACKUPKEY);
+  if(!backupRaw) return msg("transferMsg","No automatic local backup is available on this browser yet.","error");
+  try{
+    const backup=JSON.parse(backupRaw);
+    if(!backup || !backup.users || !Object.keys(backup.users).length)
+      return msg("transferMsg","The automatic local backup is not valid. Current data was not changed.","error");
+    if(!confirm("Restore the previous local AdVora demo database with "+Object.keys(backup.users).length+" account(s)? Current demo data will be replaced by that previous snapshot. Export a backup first if you need to preserve the current version.")) return;
+    localStorage.setItem(DBKEY,backupRaw);
+    clearSessionName();
+    document.getElementById("dashboard").classList.add("hidden");
+    document.getElementById("auth").classList.remove("hidden");
+    msg("transferMsg","Previous local backup restored. Log in with an account from that snapshot.","success");
+  }catch(e){
+    msg("transferMsg","Could not restore the automatic backup. Current data was not changed.","error");
+  }
+}
+function money(n){
+  return "$" + (Number(n)||0).toFixed(2);
+}
+function moneyPrecise(n){
+  return "$" + (Number(n)||0).toFixed(4);
+}
+function dateNow(){
+  return new Date().toLocaleString();
+}
+function safe(s){
+  return String(s ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+function currentUser(){
+  const name = getSessionName();
+  const db = loadDB();
+  return name && db.users[name] ? db.users[name] : null;
+}
+function msg(id,text,kind){
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = kind || "";
+}
+function makeUser(name,pass,ref){
+  return {
+    name, pass, referrer:ref || "",
+    packageBalance:0, referralBalance:0, activePackage:0,
+    videos:{}, referrals:[], withdrawals:[], activity:[],
+    created:dateNow()
+  };
+}
+function addActivity(user,description,amount){
+  user.activity.unshift({
+    date:dateNow(), description,
+    amount: Number(amount)||0
+  });
+}
+
+function exportDemoData(){
+  const raw=localStorage.getItem(DBKEY);
+  if(!raw) return msg("transferMsg","No demo database found in this browser.", "error");
+  try {
+    const parsed=JSON.parse(raw);
+    if(!parsed || !parsed.users || !Object.keys(parsed.users).length)
+      return msg("transferMsg","No demo accounts were found to export.", "error");
+    const blob=new Blob([JSON.stringify(parsed,null,2)],{type:"application/json"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url; a.download="advora-demo-backup.json";
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    msg("transferMsg","Backup exported. Keep this file private; it contains demo account details.","success");
+  } catch(e) { msg("transferMsg","Could not export the demo database.","error"); }
+}
+async function importDemoData(){
+  const input=document.getElementById("importDemoFile");
+  const file=input && input.files && input.files[0];
+  if(!file) return msg("transferMsg","Choose the JSON backup file first.","error");
+  try {
+    const fileData=JSON.parse(await file.text());
+    // Accept both the older raw database format and the newer wrapped export format.
+    const parsed=(fileData && fileData.db) ? fileData.db :
+                 (fileData && fileData.database) ? fileData.database :
+                 (fileData && fileData.data && fileData.data.users) ? fileData.data : fileData;
+    if(!parsed || !parsed.users || typeof parsed.users!=="object" || !Object.keys(parsed.users).length)
+      return msg("transferMsg","This file does not contain a valid AdVora demo backup.","error");
+    const current=loadDB();
+    const currentCount=Object.keys(current.users||{}).length;
+    if(currentCount && !confirm("This browser already has "+currentCount+" demo account(s). Replace its demo data with the "+Object.keys(parsed.users).length+" account(s) in this backup? Export a backup first if you need to preserve both.")) return;
+    if(!confirm("Import "+Object.keys(parsed.users).length+" demo account(s) and their demo balances/history into this browser? This is demo data only. Continue?")) return;
+    // Preserve any existing hosted-site database before importing the backup.
+    try {
+      const existingRaw=localStorage.getItem(DBKEY);
+      if(existingRaw) localStorage.setItem(DBKEY+"_before_import_backup",existingRaw);
+    } catch(e) {}
+    localStorage.setItem(DBKEY,JSON.stringify(parsed));
+    clearSessionName();
+    document.getElementById("dashboard").classList.add("hidden");
+    document.getElementById("auth").classList.remove("hidden");
+    input.value="";
+    msg("transferMsg","Import successful. Now log in using an account and password from your backup.","success");
+  } catch(e) { msg("transferMsg","Import failed. Please select a valid AdVora JSON backup.","error"); }
+}
+
+function findUserKey(db,name){
+  const wanted=String(name||"").trim().toLowerCase();
+  return Object.keys((db && db.users) || {}).find(key=>key.toLowerCase()===wanted) || "";
+}
+function register(){
+  const name = document.getElementById("regName").value.trim();
+  const pass = document.getElementById("regPass").value;
+  let ref = document.getElementById("regRef").value.trim();
+  const db = loadDB();
+
+  if(!ref){
+    const params = new URLSearchParams(location.search);
+    ref = params.get("ref") || "";
+  }
+  if(!/^[a-zA-Z0-9_]{3,20}$/.test(name)){
+    return msg("regMsg","Username must be 3–20 characters and may contain letters, numbers, or underscores.","error");
+  }
+  if(pass.length < 4){
+    return msg("regMsg","Demo password must be at least 4 characters long.","error");
+  }
+  if(findUserKey(db,name)){
+    return msg("regMsg","This username already exists. Usernames are not case-sensitive.","error");
+  }
+  if(ref){
+    const refKey=findUserKey(db,ref);
+    if(!refKey){
+      return msg("regMsg","This referrer is not present in this browser’s demo data. Create the referrer account first.","error");
+    }
+    ref=refKey;
+  }
+  if(ref.toLowerCase() === name.toLowerCase()){
+    return msg("regMsg","You cannot use your own username as the referrer.","error");
+  }
+
+  db.users[name] = makeUser(name,pass,ref);
+  if(ref){
+    db.users[ref].referrals=db.users[ref].referrals||[];
+    if(!db.users[ref].referrals.includes(name)) db.users[ref].referrals.push(name);
+    addActivity(db.users[ref],"New direct referral: "+name,0);
+  }
+  addActivity(db.users[name],"Demo account created",0);
+  saveDB(db);
+  setSessionName(name);
+  document.getElementById("regPass").value = "";
+  showDashboard();
+}
+function login(){
+  const enteredName = document.getElementById("loginName").value.trim();
+  const pass = document.getElementById("loginPass").value;
+  const db = loadDB();
+
+  // Find the saved account without being sensitive to username capitalization.
+  // Keep the original saved username key so existing balances and referrals remain linked.
+  const savedName = Object.keys(db.users || {}).find(
+    key => key.toLowerCase() === enteredName.toLowerCase()
+  );
+  const savedUser = savedName ? db.users[savedName] : null;
+
+  if(!Object.keys(db.users || {}).length){
+    return msg("loginMsg","No demo accounts are stored in this browser. If your accounts were created in the old local HTML file, import a backup using Transfer Existing Demo Accounts below.","error");
+  }
+  if(!savedUser || savedUser.pass !== pass){
+    return msg("loginMsg","Incorrect username or password. Check the username spelling and password, then try again.","error");
+  }
+  setSessionName(savedName);
+  document.getElementById("loginPass").value = "";
+  showDashboard();
+}
+function logout(){
+  clearSessionName();
+  document.getElementById("dashboard").classList.add("hidden");
+  document.getElementById("auth").classList.remove("hidden");
+  const homeHero=document.getElementById("homeHero");
+  if(homeHero) homeHero.classList.remove("hidden");
+  const homeHighlights=document.getElementById("homeHighlights");
+  if(homeHighlights) homeHighlights.classList.remove("hidden");
+}
+function showDashboard(){
+  const user = currentUser();
+  if(!user) return;
+  document.getElementById("auth").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+  const homeHero=document.getElementById("homeHero");
+  if(homeHero) homeHero.classList.add("hidden");
+  const homeHighlights=document.getElementById("homeHighlights");
+  if(homeHighlights) homeHighlights.classList.add("hidden");
+  const repairCard=document.getElementById("chainRepairCard");
+  if(repairCard) repairCard.classList.toggle("hidden", user.name !== "ahmed3");
+  render();
+}
+function referralURL(name){
+  const url = new URL(location.href);
+  url.search = "";
+  url.hash = "";
+  url.searchParams.set("ref",name);
+  return url.href;
+}
+function copyReferral(){
+  const user = currentUser();
+  if(!user) return;
+  const link = referralURL(user.name);
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(link).then(
+      () => msg("copyMsg","Referral link copied.","success"),
+      () => msg("copyMsg","Select and copy this link manually.")
+    );
+  } else {
+    msg("copyMsg","Select the link with your mouse and press Ctrl+C.");
+  }
+}
+function buyPackage(price){
+  const user = currentUser();
+  if(!user) return;
+  if(user.activePackage >= price){
+    return msg("packageMsg","You already have an equal or larger demo package activated.");
+  }
+  user.activePackage = price;
+  addActivity(user,"$"+price+" Demo Package activated (no payment)",0);
+  saveDB(loadDBWithUser(user));
+  render();
+  msg("packageMsg","$"+price+" Demo package activated. No payment was taken.","success");
+}
+function loadDBWithUser(user){
+  const db = loadDB();
+  db.users[user.name] = user;
+  return db;
+}
+function dayKey(){
+  const d = new Date();
+  return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+}
+function dailyVideoLimit(user){
+  const packageValue=Number(user && user.activePackage || 0);
+  if(packageValue>=100) return 15;
+  if(packageValue>=50) return 10;
+  if(packageValue>=30) return 6;
+  if(packageValue>=10) return 3;
+  return 0;
+}
+function countVideos(user){
+  return Number(user.videos[dayKey()] || 0);
+}
+function ancestors(db,user){
+  const list=[];
+  const seen=new Set([user.name]);
+  let ref=user.referrer;
+  for(let i=0;i<5 && ref;i++){
+    if(seen.has(ref)) break; // protect against a broken referral loop
+    const u=db.users[ref];
+    if(!u) break;
+    list.push(u);
+    seen.add(u.name);
+    ref=u.referrer;
+  }
+  return list;
+}
+function claimVideo(){
+  const user = currentUser();
+  if(!user) return;
+  const dailyLimit=dailyVideoLimit(user);
+  if(dailyLimit===0){
+    return msg("videoMsg","Activate a demo package first to unlock demo videos. No payment is taken.","error");
+  }
+  if(countVideos(user) >= dailyLimit){
+    return msg("videoMsg","You have completed all "+dailyLimit+" demo videos for today.","error");
+  }
+  const db=loadDB();
+  const me=db.users[user.name];
+  me.videos[dayKey()] = countVideos(me)+1;
+  me.packageBalance = Number(me.packageBalance||0)+0.17;
+  addActivity(me,"Demo video reward",0.17);
+
+  const up=ancestors(db,me);
+  up.forEach((u,i)=>{
+    // Percentage commission based on the $0.17 video reward.
+    const bonus=Math.round(0.17*rates[i]*10000)/10000;
+    u.referralBalance=Number(u.referralBalance||0)+bonus;
+    u.activity=u.activity||[];
+    u.referralRecords=u.referralRecords||[];
+    u.referralRecords.unshift({
+      from:me.name,level:i+1,type:"Level "+(i+1)+" commission",amount:bonus,date:dateNow()
+    });
+    addActivity(u,"Level "+(i+1)+" demo referral commission from "+me.name,bonus);
+
+    // Separate $0.01 demo activity bonus for each upline when this downline claims a video.
+    const activityBonus=0.01;
+    u.referralBalance=Number(u.referralBalance||0)+activityBonus;
+    u.referralRecords.unshift({
+      from:me.name,level:i+1,type:"Activity bonus",amount:activityBonus,date:dateNow()
+    });
+    addActivity(u,"$0.01 activity bonus from downline "+me.name,activityBonus);
+  });
+  saveDB(db);
+  render();
+  msg("videoMsg","Demo reward of $0.17 added. Each upline’s commission and separate $0.01 activity bonus were also recorded.","success");
+}
+function repairReferralListsSafe(){
+  const sessionName=getSessionName();
+  if(sessionName !== "ahmed3") {
+    return msg("chainRepairMsg","Run this safe repair only while logged in to the ahmed3 account.","error");
+  }
+  const db=loadDB();
+  // Rebuild only cached direct-referral lists from existing referrer pointers.
+  // Do not alter referrer links, balances, earnings, videos, or withdrawal history.
+  Object.values(db.users).forEach(u=>{u.referrals=[];});
+  Object.values(db.users).forEach(u=>{
+    const ref=String(u.referrer||"");
+    if(ref && ref!==u.name && db.users[ref]){
+      db.users[ref].referrals.push(u.name);
+    }
+  });
+  saveDB(db);
+  render();
+  msg("chainRepairMsg","Success! The Direct Referrals list was rebuilt from the existing referrer links. No referrer link, balance, or history was changed.","success");
+}
+
+function fixMyReferral(){
+  const sessionName=getSessionName();
+  const db=loadDB();
+  const me=sessionName ? db.users[sessionName] : null;
+  const refName=document.getElementById("fixRefName").value.trim();
+  if(!me) return msg("fixRefMsg","Please log in first.","error");
+  if(!refName) return msg("fixRefMsg","Enter the referrer username, e.g. user2.","error");
+  if(refName===me.name) return msg("fixRefMsg","You cannot set yourself as your own referrer.","error");
+  const refUser=db.users[refName];
+  if(!refUser) return msg("fixRefMsg","Username not found. First check that the user2 account exists in this browser.","error");
+
+  // Avoid creating a referral loop.
+  let cursor=refUser;
+  const seen=new Set();
+  while(cursor && cursor.referrer){
+    if(cursor.referrer===me.name) return msg("fixRefMsg","This link would create a referral loop, so it was not applied.","error");
+    if(seen.has(cursor.name)) break;
+    seen.add(cursor.name);
+    cursor=db.users[cursor.referrer];
+  }
+
+  // Remove the current user from any old referrer's direct list.
+  const oldRef=me.referrer;
+  if(oldRef && db.users[oldRef]){
+    db.users[oldRef].referrals=(db.users[oldRef].referrals||[]).filter(n=>n!==me.name);
+  }
+  me.referrer=refName;
+  // Rebuild cached direct-referral lists from referrer pointers without touching balances/history.
+  Object.values(db.users).forEach(u=>{u.referrals=[];});
+  Object.values(db.users).forEach(u=>{
+    if(u.referrer && u.referrer!==u.name && db.users[u.referrer]){
+      db.users[u.referrer].referrals.push(u.name);
+    }
+  });
+  addActivity(me,"Demo referral linked to "+refName,0);
+  addActivity(refUser,"Direct referral linked: "+me.name,0);
+  saveDB(db);
+  document.getElementById("fixRefName").value="";
+  render();
+  msg("fixRefMsg","Success! Your account has been linked to "+refName+". Now log in as user2 and check Direct Referrals.","success");
+}
+
+function levelCounts(db,user){
+  let current=[user.name];
+  const counts=[];
+  const visited=new Set([user.name]);
+  for(let level=1;level<=5;level++){
+    const next=[];
+    Object.values(db.users).forEach(u=>{
+      if(current.includes(u.referrer) && !visited.has(u.name)){
+        next.push(u.name);
+        visited.add(u.name);
+      }
+    });
+    counts.push(next.length);
+    current=next;
+  }
+  return counts;
+}
+function downlineAtEachLevel(db,user){
+  // Follow one consistent branch: each selected level must be directly below the previously selected member.
+  // Empty levels are not redistributed. Deterministic ordering keeps previews repeatable.
+  const allUsers=Object.values(db.users||{});
+  const selected=[];
+  const visited=new Set([user.name]);
+  let parentName=user.name;
+  for(let level=1;level<=5;level++){
+    const children=allUsers
+      .filter(u=>String(u.referrer||"")===parentName && !visited.has(u.name))
+      .sort((a,b)=>String(a.created||"").localeCompare(String(b.created||"")) || String(a.name).localeCompare(String(b.name)));
+    if(!children.length) break;
+    const child=children[0];
+    selected.push({user:child,level});
+    visited.add(child.name);
+    parentName=child.name;
+  }
+  return selected;
+}
+function testWithdrawalDistribution(){
+  const user=currentUser();
+  if(!user) return;
+  const db=loadDB();
+  const me=db.users[user.name];
+  if(!me) return;
+  // Read-only $5 calculation: no balances or histories are modified.
+  const testAmount=5;
+  const fee=0.50;
+  const share=0.05;
+  const uplines=ancestors(db,me).slice(0,5);
+  const downlines=downlineAtEachLevel(db,me);
+  const assigned=Math.round((uplines.length+downlines.length)*share*100)/100;
+  const unassigned=Math.max(0,Math.round((fee-assigned)*100)/100);
+  const rows=[];
+  uplines.forEach((u,i)=>rows.push("<li>Upline Level "+(i+1)+": <b>"+safe(u.name)+"</b> — "+money(share)+"</li>"));
+  downlines.forEach(item=>rows.push("<li>Downline Level "+item.level+": <b>"+safe(item.user.name)+"</b> — "+money(share)+"</li>"));
+  const result=document.getElementById("distributionTestResult");
+  if(!result) return;
+  result.classList.remove("hidden");
+  result.innerHTML="<b>Safe $5 Demo Simulation — no data changed</b><br>"+
+    "Withdrawal amount: "+money(testAmount)+"<br>"+
+    "Total fee (10%): "+money(fee)+"<br>"+
+    "Upline shares: "+money(uplines.length*share)+" ("+uplines.length+" eligible level(s))<br>"+
+    "Downline shares: "+money(downlines.length*share)+" ("+downlines.length+" eligible level(s))<br>"+
+    "Total assigned: "+money(assigned)+"<br>"+
+    "Unassigned fee (empty levels): "+money(unassigned)+"<br>"+
+    "User net amount: "+money(testAmount-fee)+"<br>"+
+    (rows.length?"<br><b>Recipients</b><ul>"+rows.join("")+"</ul>":"<br>No eligible recipients found.")+"<br><b>Note:</b> Calculation only; no balance, account, or history was changed.";
+}
+function applySafeCommissionTest(){
+  const user=currentUser();
+  if(!user) return;
+  const db=loadDB();
+  const me=db.users[user.name];
+  if(!me) return;
+  const result=document.getElementById("commissionTestResult");
+  if(me.safeCommissionTestDone){
+    result.classList.remove("hidden");
+    result.textContent="This account has already applied its one-time Safe $5 Commission Test. No further changes were made.";
+    return;
+  }
+  const uplines=ancestors(db,me).slice(0,5);
+  const downlines=downlineAtEachLevel(db,me);
+  if(!uplines.length && !downlines.length){
+    result.classList.remove("hidden");
+    result.textContent="No eligible upline or downline accounts were found. No data was changed.";
+    return;
+  }
+  const recipientCount=uplines.length+downlines.length;
+  const warning="This DEMO TEST will add $0.05 to each of "+recipientCount+" eligible recipient account(s), and write test entries to their referral/activity histories. It will NOT deduct your balance or create a withdrawal request. This can only be done once from this account. Continue?";
+  if(!confirm(warning)) return;
+  const share=0.05;
+  const distributions=[];
+  function creditTest(recipient,level,group){
+    recipient.referralBalance=Number(recipient.referralBalance||0)+share;
+    recipient.referralRecords=recipient.referralRecords||[];
+    const type="SAFE COMMISSION TEST — $5 simulation ("+group+" Level "+level+")";
+    recipient.referralRecords.unshift({from:me.name,level,type,amount:share,date:dateNow()});
+    addActivity(recipient,type+" from "+me.name,share);
+    distributions.push({username:recipient.name,level,group});
+  }
+  uplines.forEach((u,i)=>creditTest(u,i+1,"Upline"));
+  downlines.forEach(item=>creditTest(item.user,item.level,"Downline"));
+  me.safeCommissionTestDone=true;
+  addActivity(me,"Safe $5 commission distribution test run (no withdrawal; no balance deducted)",0);
+  saveDB(db);
+  render();
+  result.classList.remove("hidden");
+  result.innerHTML="<b>Safe Commission Test completed — demo only</b><br>Initiating account: <b>"+safe(me.name)+"</b><br>Eligible uplines: "+uplines.length+"; credited: "+money(uplines.length*share)+"<br>Eligible downlines: "+downlines.length+"; credited: "+money(downlines.length*share)+"<br>Total credited to recipients: <b>"+money(distributions.length*share)+"</b><br><b>Your balance was not deducted. No withdrawal request was created.</b><br><br><b>Recipients</b><ul>"+distributions.map(d=>"<li>"+safe(d.group)+" Level "+d.level+": <b>"+safe(d.username)+"</b> — "+money(share)+"</li>").join("")+"</ul><b>Note:</b> Recipient demo balances and histories were changed by this test; all entries are labelled as a Safe Commission Test.";
+}
+
+function withdraw(){
+  const user=currentUser();
+  if(!user) return;
+  const amount=Number(document.getElementById("withdrawAmount").value);
+  if(!Number.isFinite(amount) || amount<5){
+    return msg("withdrawMsg","The minimum withdrawal is $5.00.","error");
+  }
+  const db=loadDB();
+  const me=db.users[user.name];
+  const total=Number(me.packageBalance||0)+Number(me.referralBalance||0);
+  if(amount>total){
+    return msg("withdrawMsg","Your total available demo balance is "+money(total)+".","error");
+  }
+  // Deduct the gross request from the user's demo balances.
+  let remaining=amount;
+  const fromPackage=Math.min(Number(me.packageBalance||0),remaining);
+  me.packageBalance=Number(me.packageBalance||0)-fromPackage;
+  remaining-=fromPackage;
+  if(remaining>0) me.referralBalance=Number(me.referralBalance||0)-remaining;
+
+  const fee=Math.round(amount*0.10*100)/100;
+  const net=Math.round((amount-fee)*100)/100;
+  const share=Math.round(amount*0.01*100)/100;
+  const uplines=ancestors(db,me).slice(0,5);
+  const downlines=downlineAtEachLevel(db,me);
+  const distributions=[];
+  function creditShare(recipient, level, group){
+    if(!recipient || share<=0) return;
+    recipient.referralBalance=Number(recipient.referralBalance||0)+share;
+    recipient.referralRecords=recipient.referralRecords||[];
+    const type="Withdrawal fee share ("+group+" Level "+level+")";
+    recipient.referralRecords.unshift({from:me.name,level,type,amount:share,date:dateNow()});
+    addActivity(recipient,type+" from "+me.name,share);
+    distributions.push({username:recipient.name,level,group,amount:share});
+  }
+  uplines.forEach((u,i)=>creditShare(u,i+1,"Upline"));
+  downlines.forEach(item=>creditShare(item.user,item.level,"Downline"));
+  const uplineFee=Math.round(uplines.length*share*100)/100;
+  const downlineFee=Math.round(downlines.length*share*100)/100;
+  const actuallyAssigned=Math.round((uplineFee+downlineFee)*100)/100;
+  const unassignedFee=Math.max(0,Math.round((fee-actuallyAssigned)*100)/100);
+  me.withdrawals.unshift({
+    amount,fee,net,uplineFee,downlineFee,unassignedFee,
+    distributions,status:"Demo request submitted",date:dateNow()
+  });
+  addActivity(me,"Demo withdrawal requested (10% fee: Upline 5% + Downline 5%)",-amount);
+  saveDB(db);
+  document.getElementById("withdrawAmount").value="";
+  render();
+  msg("withdrawMsg","Demo request saved. Gross amount: "+money(amount)+", total fee: "+money(fee)+", Upline assigned: "+money(uplineFee)+", Downline assigned: "+money(downlineFee)+", unassigned: "+money(unassignedFee)+", net: "+money(net)+". No real payment was made.","success");
+}
+function renderReferralTree(db,user){
+  const target=document.getElementById("referralTree");
+  if(!target) return;
+  const allUsers=Object.values(db.users||{});
+  const childrenOf=(name)=>allUsers
+    .filter(u=>String(u.referrer||"")===name && u.name!==name)
+    .sort((a,b)=>String(a.created||"").localeCompare(String(b.created||"")) || String(a.name).localeCompare(String(b.name)));
+  const visited=new Set([user.name]);
+  function nodeHTML(u,depth){
+    if(!u || visited.has(u.name)) return "";
+    visited.add(u.name);
+    const kids=childrenOf(u.name).filter(k=>!visited.has(k.name));
+    return '<div class="tree-node"><div class="tree-node-card"><div class="tree-node-name">'+safe(u.name)+'</div>'+
+      '<div class="tree-node-meta">Level '+depth+' · Package '+money(u.activePackage||0)+'</div></div>'+
+      (kids.length?'<div class="tree-children">'+kids.map(k=>nodeHTML(k,depth+1)).join("")+'</div>':'')+
+      '</div>';
+  }
+  const direct=childrenOf(user.name);
+  target.innerHTML='<div class="tree-root-wrap"><div class="tree-root">♛ '+safe(user.name)+' <span style="font-size:11px;font-weight:500;color:#d0e2ff">MAIN ACCOUNT</span></div></div>'+
+    (direct.length?'<div class="tree-teams">'+direct.map((child,index)=>
+      '<section class="tree-team"><div class="tree-team-title">DIRECT REFERRAL '+(index+1)+'</div>'+nodeHTML(child,1)+'</section>'
+    ).join("")+'</div>':'<div class="tree-empty">No direct referrals yet. New referrals will appear here.</div>');
+}
+function render(){
+  const db=loadDB();
+  const user=db.users[getSessionName()];
+  if(!user) return;
+  document.getElementById("welcome").textContent=user.name;
+  document.getElementById("packageBal").textContent=money(user.packageBalance);
+  document.getElementById("referralBal").textContent=money(user.referralBalance);
+  document.getElementById("referralBal2").textContent=money(user.referralBalance);
+  document.getElementById("activePackage").textContent=money(user.activePackage);
+  document.getElementById("directCount").textContent=(user.referrals||[]).length;
+  document.getElementById("myLink").textContent=referralURL(user.name);
+  const videoLimit=dailyVideoLimit(user);
+  document.getElementById("videoCount").textContent=countVideos(user)+"/"+videoLimit;
+  document.getElementById("videoBtn").disabled=videoLimit===0 || countVideos(user)>=videoLimit;
+
+  const direct=document.getElementById("directTeam");
+  const children=(user.referrals||[]).map(n=>db.users[n]).filter(Boolean);
+  direct.innerHTML=children.length ? children.map(u=>
+    "<tr><td>"+safe(u.name)+"</td><td>"+safe(u.created)+"</td><td>"+money(u.activePackage)+"</td></tr>"
+  ).join("") : '<tr><td colspan="3">No direct referrals yet.</td></tr>';
+  renderReferralTree(db,user);
+
+  const counts=levelCounts(db,user);
+  document.getElementById("levelTeam").innerHTML=rates.map((rate,i)=>
+    "<tr><td>Level "+(i+1)+"</td><td>"+(rate*100)+"%</td><td>"+counts[i]+"</td></tr>"
+  ).join("");
+
+  const records=user.referralRecords||[];
+  document.getElementById("referralRows").innerHTML=records.length ? records.map(r=>
+    "<tr><td>"+safe(r.from)+"</td><td>"+safe(r.type || ("Level "+r.level+" commission"))+"</td><td>"+moneyPrecise(r.amount)+"</td><td>"+safe(r.date)+"</td></tr>"
+  ).join("") : '<tr><td colspan="4">No referral bonuses yet.</td></tr>';
+
+  document.getElementById("withdrawRows").innerHTML=(user.withdrawals||[]).length ?
+    user.withdrawals.map(w=>"<tr><td>"+money(w.amount)+"</td><td>"+money(w.fee)+"</td><td>"+money(w.net)+"</td><td>"+money(w.uplineFee||0)+"</td><td>"+money(w.downlineFee||0)+"</td><td>"+money(w.unassignedFee||0)+"</td><td>"+safe(w.status)+"</td></tr>").join("")
+    : '<tr><td colspan="7">No withdrawal requests yet.</td></tr>';
+
+  document.getElementById("activityRows").innerHTML=(user.activity||[]).length ?
+    user.activity.map(a=>"<tr><td>"+safe(a.date)+"</td><td>"+safe(a.description)+"</td><td>"+money(a.amount)+"</td></tr>").join("")
+    : '<tr><td colspan="3">No activity yet.</td></tr>';
+}
+function migrateOldReferralHistory(){
+  const db=loadDB();
+  if(db.referralHistoryMigrationV2) return;
+  let changed=false;
+  Object.values(db.users||{}).forEach(user=>{
+    const records=user.referralRecords||[];
+    const groups={};
+    records.forEach((r,index)=>{
+      // Only repair legacy rows that have no type and were saved as $0.01.
+      if(!r.type && Number(r.amount)===0.01 && r.from && r.date && Number(r.level)>=1 && Number(r.level)<=5){
+        const key=[r.from,r.date,r.level].join('|');
+        (groups[key] ||= []).push(index);
+      }
+    });
+    Object.entries(groups).forEach(([key,indices])=>{
+      if(indices.length!==2) return;
+      const commissionIndex=indices[0];
+      const activityIndex=indices[1];
+      const commissionRecord=records[commissionIndex];
+      const activityRecord=records[activityIndex];
+      const rate=rates[Number(commissionRecord.level)-1];
+      const correctCommission=Math.round(0.17*rate*10000)/10000;
+      commissionRecord.type='Level '+commissionRecord.level+' commission';
+      commissionRecord.amount=correctCommission;
+      activityRecord.type='Activity bonus';
+      activityRecord.amount=0.01;
+      // Bring the stored balance in line with the corrected legacy entries.
+      user.referralBalance=Math.max(0, Number(user.referralBalance||0) - 0.01 + correctCommission);
+      changed=true;
+    });
+  });
+  db.referralHistoryMigrationV2=true;
+  if(changed || !db.referralHistoryMigrationV2) saveDB(db);
+  else saveDB(db);
+}
+
+(function init(){
+  migrateOldReferralHistory();
+  const params=new URLSearchParams(location.search);
+  const ref=params.get("ref");
+  if(ref && document.getElementById("regRef")) {
+    document.getElementById("regRef").value=ref;
+  }
+  // A referral link must show the registration/login screen, not the inviter's dashboard.
+  // The referral field is prefilled above, and existing demo accounts/balances are not deleted.
+  if(ref) {
+    clearSessionName();
+    document.getElementById("dashboard").classList.add("hidden");
+    document.getElementById("auth").classList.remove("hidden");
+  } else if(currentUser()) {
+    showDashboard();
+  }
+  const repairCard=document.getElementById("chainRepairCard");
+  if(repairCard && getSessionName()!=="ahmed3") repairCard.classList.add("hidden");
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+  const SUPABASE_URL = "https://bowcfccdqqhazsllmsou.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_9Hbg3idYHakJPL-TFTpi5Q_X5VrsUZj";
+  let cloudClient = null;
+  let cloudUser = null;
+  let cloudProfile = null;
+  let cloudPackage = null;
+  let cloudTodayClaims = 0;
+  function cloudMsg(id, text, kind) {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = text; el.className = kind || "muted"; }
+  }
+  function cloudMoney(n) { return "$" + (Number(n) || 0).toFixed(2); }
+  function cloudClientReady() {
+    if (!window.supabase || !window.supabase.createClient) {
+      cloudMsg("cloudAuthMsg", "Cloud library did not load. Please refresh the page and try again.", "error");
+      return false;
+    }
+    if (!cloudClient) cloudClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    });
+    return true;
+  }
+  window.cloudSignUp = async function() {
+    if (!cloudClientReady()) return;
+    const username = document.getElementById("cloudUsername").value.trim();
+    const email = document.getElementById("cloudEmail").value.trim();
+    const password = document.getElementById("cloudPassword").value;
+    const referral = document.getElementById("cloudReferral").value.trim().toUpperCase();
+    if (!/^[A-Za-z0-9_]{3,24}$/.test(username)) return cloudMsg("cloudAuthMsg", "Username must be 3–24 letters, numbers, or underscores.", "error");
+    if (!email || password.length < 8) return cloudMsg("cloudAuthMsg", "Enter a valid email and a password of at least 8 characters.", "error");
+    cloudMsg("cloudAuthMsg", "Creating your shared account…");
+    const {data,error} = await cloudClient.auth.signUp({
+      email, password,
+      options: { data: { username, display_name: username, referral_code: referral || null } }
+    });
+    if (error) return cloudMsg("cloudAuthMsg", error.message, "error");
+    if (data.session) {
+      cloudUser = data.user;
+      await cloudLoadDashboard();
+      cloudMsg("cloudAuthMsg", "Shared account created and signed in.", "success");
+    } else {
+      cloudMsg("cloudAuthMsg", "Account request created. Check your email for a confirmation link, then log in here. If no email arrives, check Supabase Auth email settings.", "success");
+    }
+  };
+  window.cloudSignIn = async function() {
+    if (!cloudClientReady()) return;
+    const email = document.getElementById("cloudLoginEmail").value.trim();
+    const password = document.getElementById("cloudLoginPassword").value;
+    if (!email || !password) return cloudMsg("cloudAuthMsg", "Enter your email and password.", "error");
+    cloudMsg("cloudAuthMsg", "Signing in…");
+    const {data,error} = await cloudClient.auth.signInWithPassword({email,password});
+    if (error) return cloudMsg("cloudAuthMsg", error.message, "error");
+    cloudUser = data.user;
+    document.getElementById("cloudLoginPassword").value = "";
+    await cloudLoadDashboard();
+    cloudMsg("cloudAuthMsg", "Signed in to the shared database.", "success");
+  };
+  window.cloudSignOut = async function() {
+    if (!cloudClientReady()) return;
+    const {error} = await cloudClient.auth.signOut();
+    if (error) return cloudMsg("cloudDashMsg", error.message, "error");
+    cloudUser = null; cloudProfile = null; cloudPackage = null; cloudTodayClaims = 0;
+    document.getElementById("cloudDashboard").classList.add("hidden");
+    document.getElementById("auth").classList.remove("hidden");
+    document.getElementById("homeHero").classList.remove("hidden");
+    document.getElementById("homeHighlights").classList.remove("hidden");
+    document.getElementById("cloudLoginPassword").value = "";
+    cloudMsg("cloudAuthMsg", "Logged out of shared account.", "success");
+    window.scrollTo({top:0,behavior:"smooth"});
+  };
+  async function cloudLoadDashboard() {
+    if (!cloudClientReady()) return;
+    const {data:{user},error:authError} = await cloudClient.auth.getUser();
+    if (authError || !user) return cloudMsg("cloudAuthMsg", "Please log in to your shared account.", "error");
+    cloudUser = user;
+    const [{data:profile,error:pErr},{data:wallet,error:wErr},{data:packages,error:pkgErr},{data:claims,error:cErr}] = await Promise.all([
+      cloudClient.from("profiles").select("id,username,referral_code,active_package_id,created_at").eq("id",user.id).single(),
+      cloudClient.from("wallets").select("package_balance,referral_balance").eq("user_id",user.id).single(),
+      cloudClient.from("packages").select("id,price,daily_video_limit,reward_per_video").eq("active",true).order("price"),
+      cloudClient.from("video_claims").select("id,claim_date,slot_number,reward_amount").eq("user_id",user.id).eq("claim_date",new Date().toISOString().slice(0,10))
+    ]);
+    if (pErr || wErr || pkgErr || cErr) return cloudMsg("cloudDashMsg", "Could not load all cloud data: " + ((pErr||wErr||pkgErr||cErr).message || "unknown error"), "error");
+    cloudProfile = profile;
+    cloudTodayClaims = claims.length;
+    cloudPackage = packages.find(p => Number(p.id) === Number(profile.active_package_id)) || null;
+    document.getElementById("cloudWelcome").textContent = "Welcome, " + (profile.username || user.email) + ". This account uses the shared AdVora database.";
+    document.getElementById("cloudReferralCode").textContent = profile.referral_code || "Not assigned";
+    document.getElementById("cloudPackageBal").textContent = cloudMoney(wallet.package_balance);
+    document.getElementById("cloudReferralBal").textContent = cloudMoney(wallet.referral_balance);
+    document.getElementById("cloudActivePackage").textContent = cloudPackage ? cloudMoney(cloudPackage.price) : "None";
+    document.getElementById("cloudVideoCount").textContent = String(claims.length) + (cloudPackage ? "/" + cloudPackage.daily_video_limit : "");
+    document.getElementById("cloudDashboard").classList.remove("hidden");
+    document.getElementById("auth").classList.add("hidden");
+    document.getElementById("homeHero").classList.add("hidden");
+    document.getElementById("homeHighlights").classList.add("hidden");
+    document.getElementById("dashboard").classList.add("hidden");
+    cloudMsg("cloudDashMsg", "Cloud data loaded. Balances and video claims are stored in Supabase.", "success");
+    const {data:teamData,error:teamError} = await cloudClient.rpc("get_my_referral_team");
+    const teamBody = document.getElementById("cloudTeamRows");
+    if (teamBody) {
+      if (teamError) teamBody.innerHTML = '<tr><td colspan="4">Team list could not load.</td></tr>';
+      else if (!teamData || !teamData.length) teamBody.innerHTML = '<tr><td colspan="4">No downline members yet.</td></tr>';
+      else teamBody.innerHTML = teamData.map(member => '<tr><td>' + cloudEscape(member.username || "Member") + '</td><td>' + Number(member.level) + '</td><td>' + cloudEscape(member.created_at ? new Date(member.created_at).toLocaleDateString() : "—") + '</td><td>' + (member.package_price ? cloudMoney(member.package_price) : "None") + '</td></tr>').join("");
+    }
+    document.getElementById("cloudDashboard").scrollIntoView({behavior:"smooth",block:"start"});
+  }
+  function cloudEscape(value) {
+    return String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+  }
+  window.cloudRefresh = async function(){ await cloudLoadDashboard(); };
+  window.cloudActivatePackage = async function(price) {
+    if (!cloudClientReady() || !cloudUser) return cloudMsg("cloudDashMsg","Please log in first.","error");
+    const {data:pkg,error:findError} = await cloudClient.from("packages").select("id").eq("price",price).eq("active",true).single();
+    if (findError || !pkg) return cloudMsg("cloudDashMsg","Could not find that demo package.","error");
+    const {error} = await cloudClient.rpc("activate_demo_package",{p_package_id:pkg.id});
+    if (error) return cloudMsg("cloudDashMsg",error.message,"error");
+    await cloudLoadDashboard();
+    cloudMsg("cloudDashMsg", "Demo package activated. No payment was taken.", "success");
+  };
+  window.cloudClaimVideo = async function() {
+    if (!cloudClientReady() || !cloudUser) return cloudMsg("cloudDashMsg","Please log in first.","error");
+    const {error} = await cloudClient.rpc("claim_demo_video");
+    if (error) return cloudMsg("cloudDashMsg",error.message,"error");
+    await cloudLoadDashboard();
+    cloudMsg("cloudDashMsg", "Demo video reward recorded in the shared database.", "success");
+  };
+  if (cloudClientReady()) {
+    cloudClient.auth.getSession().then(({data,error}) => {
+      if (!error && data.session) cloudLoadDashboard();
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
