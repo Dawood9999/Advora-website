@@ -832,7 +832,7 @@ footer{color:#9c9278!important}a{color:#f0d77b}
   <div class="card">
     <h2>Shared Referral Team</h2>
     <p class="muted">Downline members in your referral tree, loaded from the shared database.</p>
-    <div class="tablewrap"><table><thead><tr><th>Username</th><th>Level</th><th>Joined</th><th>Demo Package</th></tr></thead><tbody id="cloudTeamRows"><tr><td colspan="4">Loading team…</td></tr></tbody></table></div>
+    <div class="tablewrap"><table><thead><tr><th>Member</th><th>Referred By</th><th>Level</th><th>Joined</th><th>Demo Package</th></tr></thead><tbody id="cloudTeamRows"><tr><td colspan="5">Loading team…</td></tr></tbody></table></div>
   </div>
   <div class="notice">USDT BEP20 deposits and payouts are not active. Do not send money to this demo site. Wallet payments require further secure server-side payment verification and review.</div>
 </section>
@@ -1801,9 +1801,14 @@ function migrateOldReferralHistory(){
     const {data:teamData,error:teamError} = await cloudClient.rpc("get_my_referral_team");
     const teamBody = document.getElementById("cloudTeamRows");
     if (teamBody) {
-      if (teamError) teamBody.innerHTML = '<tr><td colspan="4">Team list could not load.</td></tr>';
-      else if (!teamData || !teamData.length) teamBody.innerHTML = '<tr><td colspan="4">No downline members yet.</td></tr>';
-      else teamBody.innerHTML = teamData.map(member => '<tr><td>' + cloudEscape(member.username || "Member") + '</td><td>' + Number(member.level) + '</td><td>' + cloudEscape(member.created_at ? new Date(member.created_at).toLocaleDateString() : "—") + '</td><td>' + (member.package_price ? cloudMoney(member.package_price) : "None") + '</td></tr>').join("");
+      if (teamError) teamBody.innerHTML = '<tr><td colspan="5">Team list could not load.</td></tr>';
+      else if (!teamData || !teamData.length) teamBody.innerHTML = '<tr><td colspan="5">No downline members yet.</td></tr>';
+      else teamBody.innerHTML = teamData.map(member => {
+        const level = Math.max(1, Math.min(20, Number(member.level) || 1));
+        const indent = '&nbsp;'.repeat((level - 1) * 3);
+        const branch = level === 1 ? '↳ ' : '└ ';
+        return '<tr><td>' + indent + branch + cloudEscape(member.username || "Member") + '</td><td>' + cloudEscape(member.parent_username || "—") + '</td><td>' + level + '</td><td>' + cloudEscape(member.created_at ? new Date(member.created_at).toLocaleDateString() : "—") + '</td><td>' + (member.package_price ? cloudMoney(member.package_price) : "None") + '</td></tr>';
+      }).join("");
     }
     document.getElementById("cloudDashboard").scrollIntoView({behavior:"smooth",block:"start"});
   }
