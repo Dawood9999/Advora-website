@@ -1684,7 +1684,10 @@ function migrateOldReferralHistory(){
     cloudMsg("cloudAuthMsg", "Creating your shared account…");
     const {data,error} = await cloudClient.auth.signUp({
       email, password,
-      options: { data: { username, display_name: username, referral_code: referral || null } }
+      options: {
+        data: { username, display_name: username, referral_code: referral || null },
+        emailRedirectTo: "https://dawood9999.github.io/Advora-website/"
+      }
     });
     if (error) return cloudMsg("cloudAuthMsg", error.message, "error");
     if (data.session) {
