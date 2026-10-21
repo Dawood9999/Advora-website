@@ -785,6 +785,15 @@ footer{color:#9c9278!important}a{color:#f0d77b}
     <input id="cloudLoginEmail" type="email" autocomplete="username" placeholder="Email address">
     <input id="cloudLoginPassword" type="password" autocomplete="current-password" placeholder="Password">
     <button class="secondary" onclick="cloudSignIn()">Login to Shared Account</button>
+    <button type="button" onclick="cloudSendPasswordReset()">Forgot Password? Send reset email</button>
+    <div id="cloudPasswordResetPanel" class="card hidden" style="margin-top:12px">
+      <h3>Set a New Password</h3>
+      <p class="muted">Enter a new password of at least 8 characters.</p>
+      <input id="cloudNewPassword" type="password" autocomplete="new-password" placeholder="New password (minimum 8 characters)">
+      <input id="cloudConfirmPassword" type="password" autocomplete="new-password" placeholder="Confirm new password">
+      <button type="button" onclick="cloudSaveNewPassword()">Save New Password</button>
+      <p id="cloudResetMsg" aria-live="polite"></p>
+    </div>
     <p id="cloudAuthMsg" aria-live="polite"></p>
     <p class="muted">Existing local demo accounts are not changed or deleted. Real USDT deposits and withdrawals remain disabled.</p>
   </div></section>
